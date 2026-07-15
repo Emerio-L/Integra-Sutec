@@ -1,0 +1,85 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/global.css';
+
+const values = [
+  { icon: '🎯', title: 'Misión', text: 'Proveer soluciones tecnológicas integrales de alta calidad que potencien la productividad y competitividad de las empresas guatemaltecas.' },
+  { icon: '🌟', title: 'Visión', text: 'Ser el socio tecnológico de referencia en Guatemala, reconocido por la excelencia en servicio, variedad de productos y compromiso con el cliente.' },
+  { icon: '💎', title: 'Valores', text: 'Integridad, compromiso, innovación, servicio al cliente y trabajo en equipo son los pilares que guían nuestras operaciones.' },
+];
+
+const timeline = [
+  { year: '2015', title: 'Fundación', desc: 'Integra Sutec nace como distribuidor de suministros tecnológicos en Ciudad de Guatemala.' },
+  { year: '2017', title: 'Expansión de Marcas', desc: 'Consolidamos alianzas con HP, Dell, Cisco y otras marcas líderes del mercado.' },
+  { year: '2020', title: 'Transformación Digital', desc: 'Lanzamos nuestra plataforma digital para atender clientes en toda Guatemala.' },
+  { year: '2023', title: 'Crecimiento Corporativo', desc: 'Superamos los 200 clientes corporativos activos y ampliamos nuestro catálogo.' },
+  { year: '2026', title: 'Innovación Continua', desc: 'Nuevas soluciones en infraestructura de red, seguridad y servicios administrados.' },
+];
+---
+
+<BaseLayout title="Nosotros — Integra Sutec" description="Conoce a Integra en Suministros y Tecnología, S.A. Tu socio estratégico en tecnología en Guatemala.">
+  <!-- Header -->
+  <section class="bg-gradient-to-br from-dark-950 via-primary-950 to-dark-950 py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="font-display text-3xl md:text-5xl font-bold text-white mb-4 animate-slide-up">
+        Sobre <span class="gradient-text">Integra Sutec</span>
+      </h1>
+      <p class="text-dark-300 text-lg max-w-2xl mx-auto animate-slide-up" style="animation-delay: 0.15s;">
+        Más de una década equipando empresas guatemaltecas con tecnología de primer nivel.
+      </p>
+    </div>
+  </section>
+
+  <!-- Mission, Vision, Values -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {values.map((v) => (
+        <div class="card p-8 text-center hover:-translate-y-1">
+          <div class="text-4xl mb-4">{v.icon}</div>
+          <h3 class="font-display text-xl font-bold text-dark-900 mb-3">{v.title}</h3>
+          <p class="text-dark-500 text-sm leading-relaxed">{v.text}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- About Text -->
+  <section class="bg-dark-50/50 py-20">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="section-title text-center mb-8">Nuestra <span class="gradient-text">Historia</span></h2>
+      <p class="text-dark-600 leading-relaxed text-center text-lg mb-16">
+        <strong class="text-dark-900">Integra en Suministros y Tecnología, S.A.</strong> fue fundada con la visión
+        de ser el puente entre las mejores marcas tecnológicas del mundo y las empresas guatemaltecas que necesitan
+        soluciones confiables. Desde entonces, hemos construido relaciones de largo plazo basadas en confianza,
+        calidad y servicio excepcional.
+      </p>
+
+      <!-- Timeline -->
+      <div class="space-y-8">
+        {timeline.map((item, i) => (
+          <div class="flex gap-6 items-start group">
+            <div class="flex-shrink-0 w-20 text-right">
+              <span class="font-display font-bold text-xl text-primary-600">{item.year}</span>
+            </div>
+            <div class="flex-shrink-0 mt-1.5">
+              <div class="w-3 h-3 rounded-full bg-primary-500 ring-4 ring-primary-100 group-hover:ring-primary-200 transition-all"></div>
+            </div>
+            <div class="pb-6">
+              <h4 class="font-semibold text-dark-900 mb-1">{item.title}</h4>
+              <p class="text-sm text-dark-500">{item.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-gradient-to-r from-primary-600 to-primary-800 py-16">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <h2 class="font-display text-2xl md:text-3xl font-bold text-white mb-4">¿Quieres saber más?</h2>
+      <p class="text-primary-100 mb-8">Contáctanos y descubre cómo podemos ayudar a tu empresa.</p>
+      <a href="/contacto" class="btn-accent px-8 py-4">Contáctanos</a>
+    </div>
+  </section>
+</BaseLayout>

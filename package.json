@@ -1,0 +1,19 @@
+{
+  "name": "integra-sutec",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Plataforma digital de Integra en Suministros y Tecnología, S.A.",
+  "scripts": {
+    "dev:api": "pnpm --filter @integra/api dev",
+    "dev:web": "pnpm --filter @integra/web dev",
+    "dev:admin": "pnpm --filter @integra/admin dev",
+    "build:web": "pnpm --filter @integra/web build",
+    "build:admin": "pnpm --filter @integra/admin build",
+    "build:api": "pnpm --filter @integra/api build",
+    "lint": "pnpm -r lint",
+    "dev": "pnpm run --parallel dev:api dev:web dev:admin"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
