@@ -1,5 +1,5 @@
 {
-  "name": "@integra/web",
+  "name": "@integra/store",
   "type": "module",
   "version": "1.0.0",
   "private": true,

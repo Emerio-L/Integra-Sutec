@@ -8,44 +8,7 @@ importers:
 
   .: {}
 
-  apps/admin:
-    dependencies:
-      '@integra/shared':
-        specifier: workspace:*
-        version: link:../../packages/shared
-      axios:
-        specifier: ^1.9.0
-        version: 1.16.1
-      react:
-        specifier: ^19.1.0
-        version: 19.2.6
-      react-dom:
-        specifier: ^19.1.0
-        version: 19.2.6(react@19.2.6)
-      react-hot-toast:
-        specifier: ^2.5.2
-        version: 2.6.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
-      react-router-dom:
-        specifier: ^7.6.1
-        version: 7.15.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
-      recharts:
-        specifier: ^2.15.3
-        version: 2.15.4(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
-    devDependencies:
-      '@types/react':
-        specifier: ^19.1.4
-        version: 19.2.15
-      '@types/react-dom':
-        specifier: ^19.1.5
-        version: 19.2.3(@types/react@19.2.15)
-      '@vitejs/plugin-react':
-        specifier: ^4.5.2
-        version: 4.7.0(vite@6.4.2(jiti@1.21.7)(yaml@2.9.0))
-      vite:
-        specifier: ^6.3.5
-        version: 6.4.2(jiti@1.21.7)(yaml@2.9.0)
-
-  apps/api:
+  backend/api:
     dependencies:
       '@integra/shared':
         specifier: workspace:*
@@ -87,7 +50,44 @@ importers:
         specifier: ^0.34.5
         version: 0.34.5
 
-  apps/web:
+  frontend/admin:
+    dependencies:
+      '@integra/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+      axios:
+        specifier: ^1.9.0
+        version: 1.16.1
+      react:
+        specifier: ^19.1.0
+        version: 19.2.6
+      react-dom:
+        specifier: ^19.1.0
+        version: 19.2.6(react@19.2.6)
+      react-hot-toast:
+        specifier: ^2.5.2
+        version: 2.6.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      react-router-dom:
+        specifier: ^7.6.1
+        version: 7.15.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      recharts:
+        specifier: ^2.15.3
+        version: 2.15.4(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+    devDependencies:
+      '@types/react':
+        specifier: ^19.1.4
+        version: 19.2.15
+      '@types/react-dom':
+        specifier: ^19.1.5
+        version: 19.2.3(@types/react@19.2.15)
+      '@vitejs/plugin-react':
+        specifier: ^4.5.2
+        version: 4.7.0(vite@6.4.2(jiti@1.21.7)(yaml@2.9.0))
+      vite:
+        specifier: ^6.3.5
+        version: 6.4.2(jiti@1.21.7)(yaml@2.9.0)
+
+  frontend/store:
     dependencies:
       '@astrojs/tailwind':
         specifier: ^6.0.2
