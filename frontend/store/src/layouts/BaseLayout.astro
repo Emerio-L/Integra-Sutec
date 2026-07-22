@@ -17,8 +17,7 @@ const path = Astro.url.pathname;
     <header class="site-header">
       <nav class="header-inner" aria-label="Navegación principal">
         <a class="brand" href="/" aria-label="Integra Sutec, inicio">
-          <span class="brand-mark">IS</span>
-          <span><strong>Integra<span>Sutec</span></strong><small>Tecnología que te conecta</small></span>
+          <img class="brand-logo" src="/assets/integra-sutec-logo-dark.webp" width="909" height="212" alt="Integra Sutec — Tecnología que te conecta" />
         </a>
         <div class="nav-links">
           <a class:list={[{active:path==='/' }]} href="/">Inicio</a>
@@ -42,7 +41,7 @@ const path = Astro.url.pathname;
     <main><slot /></main>
     <footer class="site-footer">
       <div class="footer-grid">
-        <div class="footer-brand"><a class="brand" href="/"><span class="brand-mark small">IS</span><strong>Integra<span>Sutec</span></strong></a><p>Tu tienda de confianza en tecnología. Productos electrónicos con garantía local y excelente experiencia.</p></div>
+        <div class="footer-brand"><a class="brand" href="/"><img class="footer-logo" src="/assets/integra-sutec-logo-dark.webp" width="909" height="212" alt="Integra Sutec" /></a><p>Tu tienda de confianza en tecnología. Productos electrónicos con garantía local y excelente experiencia.</p></div>
         <div><h3>Enlaces rápidos</h3><a href="/">Inicio</a><a href="/catalogo">Productos</a><a href="/nosotros">Nosotros</a><a href="/contacto">Contacto</a></div>
         <div><h3>Categorías</h3><div id="footer-categories"><a href="/catalogo">Ver todas las categorías</a></div></div>
         <div><h3>Información</h3><a href="/contacto">Preguntas frecuentes</a><a href="/contacto">Envíos y entregas</a><a href="/contacto">Garantías y devoluciones</a><a href="/contacto">Aviso de privacidad</a></div>
