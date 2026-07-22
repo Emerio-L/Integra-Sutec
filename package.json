@@ -19,6 +19,7 @@
     "prisma:generate": "pnpm --filter @integra/api exec prisma generate",
     "prisma:migrate": "pnpm --filter @integra/api exec prisma migrate dev",
     "prisma:seed": "pnpm --filter @integra/api exec prisma db seed",
+    "admin:reset-password": "pnpm --filter @integra/api admin:reset-password",
     "dev": "pnpm --parallel --filter @integra/api --filter @integra/store --filter @integra/admin dev"
   },
   "engines": {
