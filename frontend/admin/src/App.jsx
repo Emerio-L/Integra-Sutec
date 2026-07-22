@@ -15,6 +15,7 @@ import QuoteRequests from './pages/QuoteRequests';
 import Orders from './pages/Orders';
 import Contacts from './pages/Contacts';
 import Users from './pages/Users';
+import Banners from './pages/Banners';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -49,6 +50,7 @@ export default function App() {
             <Route path="pedidos" element={<Orders />} />
             <Route path="contactos" element={<Contacts />} />
             <Route path="usuarios" element={<Users />} />
+            <Route path="contenido/banner-principal" element={<Banners />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

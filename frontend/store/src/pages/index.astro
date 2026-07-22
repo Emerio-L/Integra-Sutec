@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import '../styles/global.css';
+import HeroMedia from '../components/HeroMedia.astro';
 const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
 ---
 <BaseLayout title="Integra Sutec — Tecnología que impulsa tu día">
@@ -8,7 +9,7 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
     <div class="hero-circuit" aria-hidden="true"></div>
     <div class="hero-inner">
       <h1>Tecnología que<br/><span>impulsa tu día</span></h1>
-      <div class="hero-media" id="hero-media" aria-label="Productos destacados del banner"><div class="hero-orbit"></div><span>IS</span></div>
+      <HeroMedia />
     </div>
   </section>
 
@@ -60,7 +61,7 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
       media.innerHTML = `<div class="hero-product-stage">${images.map((item,index) => `<img class="hero-product hero-product-${index+1}" src="${escapeHtml(item.src)}" alt="${escapeHtml(item.name)}"/>`).join('')}</div>`;
     }
     function wireFavorites() { const key='integrasutec:favorites:v1'; let saved=[]; try { saved=JSON.parse(localStorage.getItem(key)||'[]'); } catch {} document.querySelectorAll('[data-favorite]').forEach(btn=>{ const id=btn.dataset.favorite; const sync=()=>{btn.textContent=saved.includes(id)?'♥':'♡';btn.classList.toggle('active',saved.includes(id));}; sync(); btn.addEventListener('click',()=>{saved=saved.includes(id)?saved.filter(x=>x!==id):[...saved,id];try{localStorage.setItem(key,JSON.stringify(saved));}catch{}sync();}); }); }
-    async function loadHome() { try { const [catsRes,productsRes] = await Promise.all([fetch(`${API}/api/categories`),fetch(`${API}/api/products?limit=6&status=active`)]); if(!catsRes.ok||!productsRes.ok) throw new Error(); const [cats,products]=await Promise.all([catsRes.json(),productsRes.json()]); renderCategories(cats.data||[]); renderProducts(products.data||[]); let bannerLoaded=false; try { const bannerRes=await fetch(`${API}/api/v1/public/banners`); if(bannerRes.ok){const data=await bannerRes.json();const banner=(data.data||[])[0];const url=banner?.desktopImageUrl||banner?.desktop_image_url;if(url){const media=document.getElementById('hero-media');media.innerHTML=`<img src="${escapeHtml(url)}" alt=""/>`;bannerLoaded=true;}} } catch {} if(!bannerLoaded) renderHeroProducts(products.data||[]); } catch { document.getElementById('featured-products').innerHTML=''; document.getElementById('home-error').hidden=false; const rail=document.getElementById('category-rail'); rail.querySelector('.category-loading')?.remove(); } }
+    async function loadHome() { try { const [catsRes,productsRes] = await Promise.all([fetch(`${API}/api/categories`),fetch(`${API}/api/products?limit=6&status=active`)]); if(!catsRes.ok||!productsRes.ok) throw new Error(); const [cats,products]=await Promise.all([catsRes.json(),productsRes.json()]); renderCategories(cats.data||[]); renderProducts(products.data||[]); let bannerLoaded=false; try { const bannerRes=await fetch(`${API}/api/v1/public/banners`); if(bannerRes.ok){const data=await bannerRes.json();const banner=(data.items||data.data||[])[0];if(banner?.desktopImageUrl||banner?.desktopVideoUrl){window.dispatchEvent(new CustomEvent('integra:hero-media',{detail:banner}));bannerLoaded=true;}} } catch {} if(!bannerLoaded) renderHeroProducts(products.data||[]); } catch { document.getElementById('featured-products').innerHTML=''; document.getElementById('home-error').hidden=false; const rail=document.getElementById('category-rail'); rail.querySelector('.category-loading')?.remove(); } }
     loadHome();
   </script>
 </BaseLayout>

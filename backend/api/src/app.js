@@ -23,6 +23,7 @@ const dashboardRoutes = require('./modules/dashboard/dashboard.routes');
 const quoteRequestRoutes = require('./modules/quoteRequests/quoteRequests.routes');
 const orderRoutes        = require('./modules/orders/orders.routes');
 const contactRoutes      = require('./modules/contacts/contact.routes');
+const bannerRoutes       = require('./modules/banners/banner.routes');
 
 const app = express();
 const PORT = process.env.API_PORT || 4000;
@@ -73,6 +74,8 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/quote-requests', quoteRequestRoutes);
 app.use('/api/orders',         orderRoutes);
 app.use('/api/contacts',       contactRoutes);
+app.use('/api/v1/admin/banners', bannerRoutes.admin);
+app.get('/api/v1/public/banners', bannerRoutes.publicList);
 
 // ── Health Check ──
 app.get('/api/health', (req, res) => {

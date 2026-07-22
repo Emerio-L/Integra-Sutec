@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum BannerMediaType {
+  IMAGE
+  VIDEO
+}
+
+model HeroBanner {
+  id                   String          @id @default(cuid())
+  title                String
+  subtitle             String?
+  mediaType            BannerMediaType @default(IMAGE)
+  desktopImageUrl      String?
+  desktopImagePublicId String?
+  mobileImageUrl       String?
+  mobileImagePublicId  String?
+  desktopVideoUrl      String?
+  desktopVideoPublicId String?
+  mobileVideoUrl       String?
+  mobileVideoPublicId  String?
+  posterImageUrl       String?
+  posterImagePublicId  String?
+  videoDuration        Float?
+  videoWidth           Int?
+  videoHeight          Int?
+  videoFormat          String?
+  videoBytes           Int?
+  altText              String?
+  textColorVariant     String?
+  imagePosition        String?
+  isActive             Boolean         @default(true)
+  displayOrder         Int             @default(0)
+  startsAt             DateTime?
+  endsAt               DateTime?
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+
+  @@index([isActive, displayOrder])
+  @@index([startsAt, endsAt])
+}
