@@ -72,8 +72,8 @@ export default function Banners() {
     setSaving(true);
     try {
       const { data } = current
-        ? await api.put(`/v1/admin/banners/${current.id}`, body)
-        : await api.post('/v1/admin/banners', body);
+        ? await api.put(`/v1/admin/banners/${current.id}`, body, { headers: { 'Content-Type': undefined } })
+        : await api.post('/v1/admin/banners', body, { headers: { 'Content-Type': undefined } });
       setCurrent(data.item);
       setFiles({});
       toast.success('Contenido del banner actualizado');
