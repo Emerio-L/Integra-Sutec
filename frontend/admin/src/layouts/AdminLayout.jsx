@@ -37,8 +37,13 @@ export default function AdminLayout() {
       {/* Sidebar */}
       <aside className="sidebar">
         <div className="sidebar-logo">
-          <div className="sidebar-logo-icon">IS</div>
-          <span className="sidebar-logo-text">IntegraSutec</span>
+          <img
+            className="sidebar-brand-logo"
+            src="/assets/integra-sutec-logo-dark.webp"
+            width="909"
+            height="212"
+            alt="Integra Sutec"
+          />
         </div>
 
         <nav className="sidebar-nav">

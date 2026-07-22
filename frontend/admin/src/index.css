@@ -99,6 +99,14 @@ body {
   font-size: 18px;
 }
 
+.sidebar-brand-logo {
+  display: block;
+  width: 205px;
+  height: 52px;
+  object-fit: contain;
+  object-position: left center;
+}
+
 .sidebar-nav {
   flex: 1;
   padding: 16px 12px;
@@ -434,6 +442,14 @@ body {
   width: 100%;
   max-width: 420px;
   box-shadow: 0 24px 48px rgba(0,0,0,0.2);
+}
+
+.login-logo {
+  display: block;
+  width: min(100%, 320px);
+  height: auto;
+  margin: 0 auto 24px;
+  object-fit: contain;
 }
 
 .login-title {

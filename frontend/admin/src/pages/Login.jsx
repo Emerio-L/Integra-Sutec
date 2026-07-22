@@ -27,10 +27,14 @@ export default function Login() {
   return (
     <div className="login-container">
       <div className="login-card">
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
-          <div className="sidebar-logo-icon" style={{ width: 52, height: 52, fontSize: 18, borderRadius: 14 }}>IS</div>
-        </div>
-        <h1 className="login-title">IntegraSutec</h1>
+        <img
+          className="login-logo"
+          src="/assets/integra-sutec-logo-light.webp"
+          width="899"
+          height="209"
+          alt="Integra Sutec — Tecnología que te conecta"
+        />
+        <h1 className="login-title">Panel administrativo</h1>
         <p className="login-subtitle">Ingresa a tu panel administrativo</p>
 
         <form onSubmit={handleSubmit}>
