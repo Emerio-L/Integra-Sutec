@@ -1,0 +1,12 @@
+.git
+.github
+.codex
+.agents
+**/node_modules
+**/dist
+**/.env
+**/.env.*
+!**/.env.example
+backend/api/.local
+backend/api/public/uploads
+*.log

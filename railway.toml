@@ -1,6 +1,6 @@
 [build]
-builder = "NIXPACKS"
-buildCommand = "pnpm install --frozen-lockfile && pnpm prisma:generate && pnpm build:api"
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
 
 [deploy]
 startCommand = "pnpm --filter @integra/api prisma:migrate:deploy && pnpm --filter @integra/api start"
