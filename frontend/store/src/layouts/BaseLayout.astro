@@ -1,0 +1,66 @@
+---
+export interface Props { title: string; description?: string; }
+const { title, description = 'Integra Sutec — tecnología, comunicación y accesorios en Guatemala.' } = Astro.props;
+const path = Astro.url.pathname;
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#03132f" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <meta property="og:site_name" content="Integra Sutec" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="header-inner" aria-label="Navegación principal">
+        <a class="brand" href="/" aria-label="Integra Sutec, inicio">
+          <img class="brand-logo" src="/assets/integra-sutec-logo-dark.webp" width="909" height="212" alt="Integra Sutec — Tecnología que te conecta" />
+        </a>
+        <div class="nav-links">
+          <a class:list={[{active:path==='/' }]} href="/">Inicio</a>
+          <a class:list={[{active:path.startsWith('/catalogo') }]} href="/catalogo">Productos</a>
+          <a class:list={[{active:path.startsWith('/nosotros') }]} href="/nosotros">Nosotros</a>
+          <a class:list={[{active:path.startsWith('/contacto') }]} href="/contacto">Contacto</a>
+        </div>
+        <form class="header-search" action="/catalogo" role="search">
+          <label class="sr-only" for="global-search">Buscar productos</label>
+          <input id="global-search" name="q" placeholder="Buscar productos, marcas..." autocomplete="off" />
+          <button aria-label="Buscar" type="submit"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></button>
+        </form>
+        <a class="support-btn" href="/contacto"><svg viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><path d="M4 14h2v5H4a2 2 0 0 1-2-2v-1a2 2 0 0 1 2-2Zm16 0h-2v5h2a2 2 0 0 0 2-2v-1a2 2 0 0 0-2-2Z"/></svg>Soporte</a>
+        <button id="nav-cart-btn" class="cart-btn" type="button"><svg viewBox="0 0 24 24"><path d="M3 3h2l2 12h11l2-8H6"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>Carrito <span id="nav-cart-badge">0</span></button>
+        <button id="mobile-menu-btn" class="menu-btn" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
+      </nav>
+      <div id="mobile-menu" class="mobile-menu" hidden>
+        <a href="/">Inicio</a><a href="/catalogo">Productos</a><a href="/nosotros">Nosotros</a><a href="/contacto">Contacto</a>
+      </div>
+    </header>
+    <main><slot /></main>
+    <footer class="site-footer">
+      <div class="footer-grid">
+        <div class="footer-brand"><a class="brand" href="/"><img class="footer-logo" src="/assets/integra-sutec-logo-dark.webp" width="909" height="212" alt="Integra Sutec" /></a><p>Tu tienda de confianza en tecnología. Productos electrónicos con garantía local y excelente experiencia.</p></div>
+        <div><h3>Enlaces rápidos</h3><a href="/">Inicio</a><a href="/catalogo">Productos</a><a href="/nosotros">Nosotros</a><a href="/contacto">Contacto</a></div>
+        <div><h3>Categorías</h3><div id="footer-categories"><a href="/catalogo">Ver todas las categorías</a></div></div>
+        <div><h3>Información</h3><a href="/contacto">Preguntas frecuentes</a><a href="/contacto">Envíos y entregas</a><a href="/contacto">Garantías y devoluciones</a><a href="/contacto">Aviso de privacidad</a></div>
+        <div><h3>Contáctanos</h3><a href="mailto:info@integrasutec.com">info@integrasutec.com</a><a href="tel:+50223000000">+502 2300-0000</a><span>Ciudad de Guatemala, Guatemala</span><span>Lun - Vie: 8:00 a.m. - 6:00 p.m.</span></div>
+      </div>
+      <p class="copyright">© {new Date().getFullYear()} Integra Sutec. Todos los derechos reservados.</p>
+    </footer>
+    <script>
+      const menuBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      menuBtn?.addEventListener('click', () => { const open = mobileMenu?.hasAttribute('hidden'); mobileMenu?.toggleAttribute('hidden'); menuBtn.setAttribute('aria-expanded', String(open)); });
+      function updateCartBadge() { try { const cart = JSON.parse(localStorage.getItem('is_cart') || localStorage.getItem('integrasutec:cart:v1') || '[]'); const count = cart.reduce((sum, item) => sum + Number(item.qty || item.quantity || 0), 0); const badge = document.getElementById('nav-cart-badge'); if (badge) badge.textContent = String(count); } catch {} }
+      document.getElementById('nav-cart-btn')?.addEventListener('click', () => window.openCartDrawer ? window.openCartDrawer() : location.assign('/catalogo'));
+      updateCartBadge(); window.addEventListener('storage', updateCartBadge); window.addEventListener('cartUpdated', updateCartBadge);
+    </script>
+  </body>
+</html>

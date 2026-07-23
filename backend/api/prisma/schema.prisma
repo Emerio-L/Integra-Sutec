@@ -1,0 +1,271 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum BannerMediaType {
+  IMAGE
+  VIDEO
+}
+
+model User {
+  id            String              @id @default(cuid())
+  name          String
+  email         String              @unique
+  password_hash String
+  role          String              @default("seller")
+  status        String              @default("active")
+  created_at    DateTime            @default(now())
+  updated_at    DateTime            @updatedAt
+  movements     InventoryMovement[]
+  quotes        Quote[]
+  invoices      Invoice[]
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  description String    @default("")
+  slug        String    @unique
+  icon        String    @default("")
+  status      String    @default("active")
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  products    Product[]
+}
+
+model Brand {
+  id         String     @id @default(cuid())
+  name       String     @unique
+  logo_url   String     @default("")
+  website    String     @default("")
+  status     String     @default("active")
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  products   Product[]
+  suppliers  Supplier[]
+}
+
+model Product {
+  id               String              @id @default(cuid())
+  sku              String              @unique
+  name             String
+  description      String              @default("")
+  technical_specs  Json                @default("{}")
+  category_id      String
+  brand_id         String
+  unit_price       Decimal             @db.Decimal(12, 2)
+  cost_price       Decimal             @default(0) @db.Decimal(12, 2)
+  images           Json                @default("[]")
+  image_public_ids Json                @default("[]")
+  status           String              @default("active")
+  minimum_stock    Int                 @default(5)
+  current_stock    Int                 @default(0)
+  created_at       DateTime            @default(now())
+  updated_at       DateTime            @updatedAt
+  category         Category            @relation(fields: [category_id], references: [id])
+  brand            Brand               @relation(fields: [brand_id], references: [id])
+  movements        InventoryMovement[]
+
+  @@index([category_id])
+  @@index([brand_id])
+  @@index([status])
+}
+
+model Customer {
+  id             String    @id @default(cuid())
+  name           String
+  nit            String
+  email          String    @default("")
+  phone          String    @default("")
+  address        String    @default("")
+  city           String    @default("Guatemala")
+  contact_person String    @default("")
+  type           String    @default("corporate")
+  notes          String    @default("")
+  status         String    @default("active")
+  created_at     DateTime  @default(now())
+  updated_at     DateTime  @updatedAt
+  quotes         Quote[]
+  invoices       Invoice[]
+
+  @@index([name])
+  @@index([nit])
+}
+
+model Supplier {
+  id             String   @id @default(cuid())
+  name           String
+  nit            String   @default("")
+  email          String   @default("")
+  phone          String   @default("")
+  address        String   @default("")
+  contact_person String   @default("")
+  notes          String   @default("")
+  status         String   @default("active")
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+  brands         Brand[]
+}
+
+model InventoryMovement {
+  id             String   @id @default(cuid())
+  product_id     String
+  movement_type  String
+  quantity       Int
+  previous_stock Int
+  new_stock      Int
+  reference_type String   @default("adjustment")
+  reference_id   String?
+  warehouse_from String   @default("principal")
+  warehouse_to   String   @default("")
+  notes          String   @default("")
+  created_by_id  String
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+  product        Product  @relation(fields: [product_id], references: [id])
+  created_by     User     @relation(fields: [created_by_id], references: [id])
+
+  @@index([product_id, created_at])
+  @@index([movement_type])
+}
+
+model Quote {
+  id            String         @id @default(cuid())
+  quote_number  String         @unique
+  customer_id   String
+  items         Json
+  subtotal      Decimal        @db.Decimal(12, 2)
+  tax_amount    Decimal        @db.Decimal(12, 2)
+  total         Decimal        @db.Decimal(12, 2)
+  status        String         @default("draft")
+  valid_until   DateTime?
+  notes         String         @default("")
+  created_by_id String
+  created_at    DateTime       @default(now())
+  updated_at    DateTime       @updatedAt
+  customer      Customer       @relation(fields: [customer_id], references: [id])
+  created_by    User           @relation(fields: [created_by_id], references: [id])
+  invoices      Invoice[]
+  requests      QuoteRequest[]
+
+  @@index([customer_id])
+  @@index([status])
+}
+
+model Order {
+  id              String    @id @default(cuid())
+  order_number    String    @unique
+  customer        Json
+  items           Json
+  subtotal        Decimal   @db.Decimal(12, 2)
+  tax             Decimal   @default(0) @db.Decimal(12, 2)
+  total           Decimal   @db.Decimal(12, 2)
+  payment_method  String
+  delivery_method String    @default("contra_entrega")
+  status          String    @default("pending")
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+  invoices        Invoice[]
+
+  @@index([status])
+}
+
+model Invoice {
+  id             String   @id @default(cuid())
+  invoice_number String   @unique
+  quote_id       String?
+  order_id       String?
+  customer_id    String
+  items          Json
+  subtotal       Decimal  @db.Decimal(12, 2)
+  tax_amount     Decimal  @db.Decimal(12, 2)
+  total          Decimal  @db.Decimal(12, 2)
+  payment_status String   @default("pending")
+  payment_method String   @default("transfer")
+  notes          String   @default("")
+  created_by_id  String
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+  quote          Quote?   @relation(fields: [quote_id], references: [id])
+  order          Order?   @relation(fields: [order_id], references: [id])
+  customer       Customer @relation(fields: [customer_id], references: [id])
+  created_by     User     @relation(fields: [created_by_id], references: [id])
+
+  @@index([customer_id])
+  @@index([payment_status])
+}
+
+model QuoteRequest {
+  id                 String    @id @default(cuid())
+  company            String
+  nit                String
+  name               String
+  position           String    @default("")
+  email              String
+  phone              String
+  category           String    @default("")
+  details            String
+  deadline           DateTime?
+  notes              String    @default("")
+  status             String    @default("new")
+  converted_quote_id String?
+  created_at         DateTime  @default(now())
+  updated_at         DateTime  @updatedAt
+  converted_quote    Quote?    @relation(fields: [converted_quote_id], references: [id])
+
+  @@index([status])
+}
+
+model Contact {
+  id         String   @id @default(cuid())
+  name       String
+  email      String
+  phone      String   @default("")
+  company    String   @default("")
+  subject    String   @default("general")
+  message    String
+  status     String   @default("new")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@index([status])
+}
+
+model HeroBanner {
+  id                   String          @id @default(cuid())
+  title                String
+  subtitle             String?
+  mediaType            BannerMediaType @default(IMAGE)
+  desktopImageUrl      String?
+  desktopImagePublicId String?
+  mobileImageUrl       String?
+  mobileImagePublicId  String?
+  desktopVideoUrl      String?
+  desktopVideoPublicId String?
+  mobileVideoUrl       String?
+  mobileVideoPublicId  String?
+  posterImageUrl       String?
+  posterImagePublicId  String?
+  videoDuration        Float?
+  videoWidth           Int?
+  videoHeight          Int?
+  videoFormat          String?
+  videoBytes           Int?
+  altText              String?
+  textColorVariant     String?
+  imagePosition        String?
+  isActive             Boolean         @default(true)
+  displayOrder         Int             @default(0)
+  startsAt             DateTime?
+  endsAt               DateTime?
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+
+  @@index([isActive, displayOrder])
+  @@index([startsAt, endsAt])
+}

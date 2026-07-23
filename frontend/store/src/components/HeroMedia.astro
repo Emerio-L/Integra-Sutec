@@ -1,0 +1,29 @@
+<div class="hero-media" id="hero-media" aria-label="Productos destacados del banner">
+  <div class="hero-orbit"></div><span>IS</span>
+</div>
+
+<script>
+  const media = document.getElementById('hero-media');
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const saveData = navigator.connection?.saveData === true;
+  const safe = (value = '') => String(value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+  function pictureMarkup(item, source = item.desktopImageUrl) {
+    return `<div class="hero-dynamic-media hero-image-media"><picture>${item.mobileImageUrl ? `<source media="(max-width: 768px)" srcset="${safe(item.mobileImageUrl)}">` : ''}<img src="${safe(source)}" width="1040" height="460" fetchpriority="high" alt="${safe(item.altText || item.title || '')}"></picture></div>`;
+  }
+  function render(item) {
+    if (!media || !item) return;
+    if (item.mediaType !== 'VIDEO') { if (item.desktopImageUrl) media.innerHTML = pictureMarkup(item); return; }
+    const poster = item.posterImageUrl || item.desktopImageUrl;
+    if (reducedMotion.matches || saveData || !item.desktopVideoUrl) { if (poster) media.innerHTML = pictureMarkup(item, poster); return; }
+    media.innerHTML = `<div class="hero-dynamic-media hero-video-media"><img class="hero-video-fallback" src="${safe(poster)}" width="900" height="500" alt="${safe(item.altText || item.title || '')}"><video autoplay muted loop playsinline preload="metadata" poster="${safe(poster)}" aria-label="${safe(item.altText || item.title || '')}">${item.mobileVideoUrl ? `<source src="${safe(item.mobileVideoUrl)}" media="(max-width: 768px)">` : ''}<source src="${safe(item.desktopVideoUrl)}"></video></div>`;
+    const video = media.querySelector('video');
+    video?.addEventListener('playing', () => media.querySelector('.hero-video-fallback')?.classList.add('hidden'));
+    video?.addEventListener('error', () => { video.hidden = true; if (import.meta.env.DEV) console.warn('No se pudo reproducir el banner de video'); });
+    video?.play().catch(() => { video.hidden = true; });
+  }
+  window.addEventListener('integra:hero-media', event => render(event.detail));
+  window.renderIntegraHeroMedia = render;
+  if (window.__integraPendingHero) render(window.__integraPendingHero);
+  reducedMotion.addEventListener('change', () => location.reload());
+  document.addEventListener('visibilitychange', () => { const video = media?.querySelector('video'); if (!video) return; document.hidden ? video.pause() : video.play().catch(() => {}); });
+</script>

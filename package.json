@@ -5,15 +5,25 @@
   "description": "Plataforma digital de Integra en Suministros y Tecnología, S.A.",
   "scripts": {
     "dev:api": "pnpm --filter @integra/api dev",
-    "dev:web": "pnpm --filter @integra/web dev",
+    "dev:store": "pnpm --filter @integra/store dev",
+    "dev:web": "pnpm dev:store",
     "dev:admin": "pnpm --filter @integra/admin dev",
-    "build:web": "pnpm --filter @integra/web build",
+    "build:store": "pnpm --filter @integra/store build",
+    "build:web": "pnpm build:store",
     "build:admin": "pnpm --filter @integra/admin build",
     "build:api": "pnpm --filter @integra/api build",
-    "lint": "pnpm -r lint",
-    "dev": "pnpm run --parallel dev:api dev:web dev:admin"
+    "build": "pnpm build:store && pnpm build:admin && pnpm build:api",
+    "lint": "pnpm -r --if-present lint",
+    "test": "pnpm -r --if-present test",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "prisma:generate": "pnpm --filter @integra/api exec prisma generate",
+    "prisma:migrate": "pnpm --filter @integra/api exec prisma migrate dev",
+    "prisma:seed": "pnpm --filter @integra/api exec prisma db seed",
+    "admin:reset-password": "pnpm --filter @integra/api admin:reset-password",
+    "dev": "pnpm --parallel --filter @integra/api --filter @integra/store --filter @integra/admin dev"
   },
   "engines": {
     "node": ">=20.0.0"
-  }
+  },
+  "packageManager": "pnpm@11.2.2"
 }
