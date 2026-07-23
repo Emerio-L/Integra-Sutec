@@ -108,7 +108,7 @@ export default function Banners() {
         <FileField label="Imagen principal" help="Obligatoria · máximo 8 MB" accept="image/jpeg,image/png,image/webp,image/avif" selected={files.desktopImage} onChange={file => selectFile('desktopImage', file)} />
         <FileField label="Imagen para celular" help="Opcional" accept="image/jpeg,image/png,image/webp,image/avif" selected={files.mobileImage} onChange={file => selectFile('mobileImage', file)} />
       </div> : <div className="simple-upload-grid video-upload-flow">
-        <FileField label="1. Seleccionar video MP4" help="Haz clic aquí para elegir CT24 3D.mp4 · máximo 20 segundos y 30 MB" selected={files.desktopVideo} onChange={file => selectFile('desktopVideo', file)} />
+        <FileField label="1. Seleccionar video" selected={files.desktopVideo} onChange={file => selectFile('desktopVideo', file)} />
         <FileField label="2. Portada JPG/PNG" help={localMode ? 'Opcional durante las pruebas locales · aquí no se selecciona el MP4' : 'Obligatoria · aquí se selecciona una imagen, no el MP4'} accept="image/jpeg,image/png,image/webp,image/avif" selected={files.posterImage} onChange={file => selectFile('posterImage', file)} />
         <FileField label="3. Video para celular" help="Opcional · puedes dejarlo vacío" selected={files.mobileVideo} onChange={file => selectFile('mobileVideo', file)} />
       </div>}
