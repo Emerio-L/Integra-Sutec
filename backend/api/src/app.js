@@ -23,10 +23,13 @@ const dashboardRoutes = require('./modules/dashboard/dashboard.routes');
 const quoteRequestRoutes = require('./modules/quoteRequests/quoteRequests.routes');
 const orderRoutes        = require('./modules/orders/orders.routes');
 const contactRoutes      = require('./modules/contacts/contact.routes');
-const bannerRoutes       = require('./modules/banners/banner.routes');
+const bannerStorage      = process.env.BANNER_STORAGE || 'cloudinary';
+const bannerRoutes       = bannerStorage === 'local'
+  ? require('./modules/banners/banner.local.routes')
+  : require('./modules/banners/banner.routes');
 
 const app = express();
-const PORT = process.env.API_PORT || 4000;
+const PORT = process.env.PORT || process.env.API_PORT || 4000;
 
 // ── Security ──
 app.use(helmet());
@@ -54,11 +57,13 @@ app.use(morgan('dev'));
 // ── Static Files (product images) ──
 // Must set CORS & disable helmet's crossOriginResourcePolicy so browsers
 // from localhost:3000 and localhost:5173 can load images served from :4000
-app.use('/uploads', (req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
-  next();
-}, express.static(path.join(__dirname, '../public/uploads')));
+if (bannerStorage === 'local') {
+  app.use('/uploads', (req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+    next();
+  }, express.static(path.join(__dirname, '../public/uploads')));
+}
 
 // ── API Routes ──
 app.use('/api/auth', authRoutes);

@@ -118,14 +118,12 @@ async function registerTransfer(req, res, next) {
 
 async function getAlerts(req, res, next) {
   try {
-    const alerts = await Product.find({
-      status: 'active',
-      $expr: { $lte: ['$current_stock', '$minimum_stock'] },
-    })
+    const activeProducts = await Product.find({ status: 'active' })
       .select('name sku current_stock minimum_stock category_id')
       .populate('category_id', 'name')
       .sort('current_stock')
       .lean();
+    const alerts = activeProducts.filter(product => product.current_stock <= product.minimum_stock);
 
     res.json({ data: alerts, total: alerts.length });
   } catch (error) {

@@ -1,7 +1,7 @@
 # Arquitectura
 
-La tienda Astro y el panel React se despliegan en Cloudflare Pages. Express se despliega en Railway. Los módulos heredados todavía usan MongoDB/Mongoose; `HeroBanner` inaugura la persistencia PostgreSQL/Prisma en esta rama. Esta convivencia es temporal y evita cambiar productos, autenticación, inventario y ventas durante la incorporación de banners.
+La tienda Astro y el panel React/Vite se publican como sitios estáticos independientes en Cloudflare Pages. Ambos consumen la API Express desplegada en Railway.
 
-El navegador del panel envía `multipart/form-data` autenticado a Express. La API valida firma MIME, extensión implícita, tamaño, rol y metadata; sube a Cloudinary y guarda URL más `public_id` en PostgreSQL. La tienda obtiene únicamente campos públicos mediante `/api/v1/public/banners`.
+Toda la persistencia estructurada utiliza PostgreSQL mediante Prisma. Los archivos no se guardan en PostgreSQL ni en Railway: la API valida y carga imágenes y videos directamente a Cloudinary, y almacena únicamente URLs, public IDs y metadatos.
 
-La migración está en `backend/api/prisma/migrations`. Producción siempre usa `prisma migrate deploy`, nunca `db push`.
+En producción `BANNER_STORAGE` debe ser `cloudinary`. El modo `local` existe únicamente en archivos ignorados por Git para pruebas de desarrollo.

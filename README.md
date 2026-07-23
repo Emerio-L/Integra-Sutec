@@ -1,14 +1,29 @@
 # Integra Sutec
 
-Monorepo con tienda Astro, panel React/Vite y API Express. El módulo **Contenido del sitio → Banner principal** administra imágenes y videos de Cloudinary; sus referencias se guardan en PostgreSQL mediante Prisma.
+Monorepo preparado para producción con:
+
+- Tienda pública: Astro en Cloudflare Pages.
+- Panel administrativo: React/Vite en Cloudflare Pages.
+- API: Express en Railway.
+- Base de datos única: PostgreSQL mediante Prisma.
+- Imágenes y videos: Cloudinary.
 
 ## Desarrollo
 
-1. Copiar `.env.example` a `.env` y configurar MongoDB (módulos heredados), PostgreSQL, JWT y Cloudinary.
-2. Ejecutar `pnpm install`.
-3. Ejecutar `pnpm prisma:generate` y `pnpm --filter @integra/api prisma:migrate:deploy`.
-4. Ejecutar `pnpm dev`.
+```bash
+pnpm install
+pnpm prisma:generate
+pnpm --filter @integra/api prisma:migrate:deploy
+pnpm dev
+```
 
-URLs: tienda `http://localhost:3000`, panel `http://localhost:5173`, API `http://localhost:4000`.
+Copia `.env.example` a `.env`. Para producción configura `DATABASE_URL`, secretos JWT, credenciales Cloudinary, `CORS_ORIGIN`, `PUBLIC_API_URL` y `VITE_API_URL`.
 
-Los banners aceptan JPEG, PNG, WebP o AVIF (8 MB) y MP4, WebM o MOV validado (30 MB, máximo 20 s). El video requiere poster y en el sitio siempre se reproduce silenciado, en bucle, inline y sin controles.
+## Producción
+
+Railway ejecuta la migración versionada antes de iniciar la API. Cloudflare Pages compila:
+
+- Tienda: `pnpm build:store`, salida `frontend/store/dist`.
+- Panel: `pnpm build:admin`, salida `frontend/admin/dist`.
+
+No se almacenan archivos persistentes en Railway ni en Git.

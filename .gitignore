@@ -31,3 +31,10 @@ coverage/
 
 # Misc
 .cache/
+
+# Local-only banner test storage
+backend/api/.local/
+backend/api/public/uploads/banners/
+backend/api/public/uploads/products/
+backend/api/src/modules/banners/banner.local.routes.js
+backend/api/scripts/reprocess-local-banner.js

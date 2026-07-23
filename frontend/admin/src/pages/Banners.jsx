@@ -21,12 +21,14 @@ export default function Banners() {
   const [current, setCurrent] = useState(null);
   const [type, setType] = useState('IMAGE');
   const [files, setFiles] = useState({});
+  const [localMode, setLocalMode] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     api.get('/v1/admin/banners').then(({ data }) => {
       const first = data.items?.[0] || null;
+      setLocalMode(data.storage === 'local-test');
       setCurrent(first);
       setType(first?.mediaType || 'IMAGE');
     }).catch(error => toast.error(error.response?.data?.error || 'No fue posible cargar el contenido actual'))
@@ -62,7 +64,7 @@ export default function Banners() {
     if (type === 'VIDEO' && !files.desktopVideo && !(current?.mediaType === 'VIDEO' && current.desktopVideoUrl)) {
       return toast.error('Selecciona el video del banner');
     }
-    if (type === 'VIDEO' && !files.posterImage && !current?.posterImageUrl) {
+    if (type === 'VIDEO' && !localMode && !files.posterImage && !current?.posterImageUrl) {
       return toast.error('Selecciona una imagen de portada para el video');
     }
 
@@ -105,10 +107,10 @@ export default function Banners() {
       {type === 'IMAGE' ? <div className="simple-upload-grid">
         <FileField label="Imagen principal" help="Obligatoria · máximo 8 MB" accept="image/jpeg,image/png,image/webp,image/avif" selected={files.desktopImage} onChange={file => selectFile('desktopImage', file)} />
         <FileField label="Imagen para celular" help="Opcional" accept="image/jpeg,image/png,image/webp,image/avif" selected={files.mobileImage} onChange={file => selectFile('mobileImage', file)} />
-      </div> : <div className="simple-upload-grid">
-        <FileField label="Video principal" help="Obligatorio · máximo 20 segundos y 30 MB" accept="video/mp4,video/webm,video/quicktime" selected={files.desktopVideo} onChange={file => selectFile('desktopVideo', file)} />
-        <FileField label="Portada del video" help="Obligatoria · se muestra mientras carga" accept="image/jpeg,image/png,image/webp,image/avif" selected={files.posterImage} onChange={file => selectFile('posterImage', file)} />
-        <FileField label="Video para celular" help="Opcional" accept="video/mp4,video/webm,video/quicktime" selected={files.mobileVideo} onChange={file => selectFile('mobileVideo', file)} />
+      </div> : <div className="simple-upload-grid video-upload-flow">
+        <FileField label="1. Seleccionar video MP4" help="Haz clic aquí para elegir CT24 3D.mp4 · máximo 20 segundos y 30 MB" selected={files.desktopVideo} onChange={file => selectFile('desktopVideo', file)} />
+        <FileField label="2. Portada JPG/PNG" help={localMode ? 'Opcional durante las pruebas locales · aquí no se selecciona el MP4' : 'Obligatoria · aquí se selecciona una imagen, no el MP4'} accept="image/jpeg,image/png,image/webp,image/avif" selected={files.posterImage} onChange={file => selectFile('posterImage', file)} />
+        <FileField label="3. Video para celular" help="Opcional · puedes dejarlo vacío" selected={files.mobileVideo} onChange={file => selectFile('mobileVideo', file)} />
       </div>}
 
       <Preview media={preview} />

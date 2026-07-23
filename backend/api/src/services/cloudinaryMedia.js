@@ -4,6 +4,7 @@ const FOLDERS = Object.freeze({
   image: 'integra-sutec/banners/images',
   video: 'integra-sutec/banners/videos',
   poster: 'integra-sutec/banners/posters',
+  product: 'integra-sutec/products',
 });
 
 cloudinary.config({
@@ -38,6 +39,10 @@ const uploadVideo = (buffer) => uploadBuffer(buffer, {
   resource_type: 'video', folder: FOLDERS.video, use_filename: false,
   unique_filename: true, overwrite: false, eager_async: true,
 });
+const uploadProductImage = (buffer) => uploadBuffer(buffer, {
+  resource_type: 'image', folder: FOLDERS.product, use_filename: false,
+  unique_filename: true, overwrite: false, format: 'webp', quality: 'auto',
+});
 async function deleteImage(publicId, kind = 'image') {
   assertOwned(publicId, kind);
   return cloudinary.uploader.destroy(publicId, { resource_type: 'image', invalidate: true });
@@ -45,6 +50,10 @@ async function deleteImage(publicId, kind = 'image') {
 async function deleteVideo(publicId) {
   assertOwned(publicId, 'video');
   return cloudinary.uploader.destroy(publicId, { resource_type: 'video', invalidate: true });
+}
+async function deleteProductImage(publicId) {
+  assertOwned(publicId, 'product');
+  return cloudinary.uploader.destroy(publicId, { resource_type: 'image', invalidate: true });
 }
 async function replaceImage(buffer, oldPublicId, options = {}) {
   const fresh = await uploadImage(buffer, options);
@@ -64,4 +73,4 @@ function generateVideoUrl(publicId, width = 1600) {
   return cloudinary.url(publicId, { resource_type: 'video', secure: true, quality: 'auto', width, crop: 'limit' });
 }
 
-module.exports = { FOLDERS, uploadImage, uploadVideo, deleteImage, deleteVideo, replaceImage, replaceVideo, generateImageUrl, generateVideoUrl, generatePosterUrl };
+module.exports = { FOLDERS, uploadImage, uploadVideo, uploadProductImage, deleteImage, deleteVideo, deleteProductImage, replaceImage, replaceVideo, generateImageUrl, generateVideoUrl, generatePosterUrl };
