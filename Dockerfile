@@ -17,4 +17,4 @@ RUN pnpm install --frozen-lockfile \
     && pnpm prisma:generate \
     && pnpm build:api
 
-CMD ["sh", "-c", "pnpm --filter @integra/api prisma:migrate:deploy && pnpm --filter @integra/api start"]
+CMD ["pnpm", "--filter", "@integra/api", "start"]
