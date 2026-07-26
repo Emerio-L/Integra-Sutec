@@ -33,6 +33,7 @@ async function seed() {
         role: 'admin',
       },
     });
+    console.log(`Administrador bootstrap actualizado: ${email}`);
   }
   console.log('Seed PostgreSQL completado.');
 }

@@ -4,7 +4,7 @@ dockerfilePath = "Dockerfile"
 
 [deploy]
 preDeployCommand = ["pnpm --filter @integra/api prisma:migrate:deploy && pnpm --filter @integra/api seed"]
-startCommand = "pnpm --filter @integra/api start"
+startCommand = "pnpm --filter @integra/api seed && pnpm --filter @integra/api start"
 healthcheckPath = "/api/health"
 healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"
