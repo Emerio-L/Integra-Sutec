@@ -23,7 +23,16 @@ async function seed() {
   if (process.env.BOOTSTRAP_ADMIN_EMAIL && process.env.BOOTSTRAP_ADMIN_PASSWORD) {
     const email = process.env.BOOTSTRAP_ADMIN_EMAIL.toLowerCase();
     const password_hash = await bcrypt.hash(process.env.BOOTSTRAP_ADMIN_PASSWORD,12);
-    await prisma.user.upsert({ where:{email}, update:{status:'active'}, create:{name:process.env.BOOTSTRAP_ADMIN_NAME || 'Administrador',email,password_hash,role:'admin'} });
+    await prisma.user.upsert({
+      where: { email },
+      update: { password_hash, role: 'admin', status: 'active' },
+      create: {
+        name: process.env.BOOTSTRAP_ADMIN_NAME || 'Administrador',
+        email,
+        password_hash,
+        role: 'admin',
+      },
+    });
   }
   console.log('Seed PostgreSQL completado.');
 }
