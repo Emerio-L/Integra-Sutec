@@ -70,7 +70,8 @@ export default function Products() {
     try {
       let saved;
       if (editing) {
-        const res = await api.put(`/products/${editing._id}`, form);
+        const { current_stock: _inventoryManagedByMovements, ...editableFields } = form;
+        const res = await api.put(`/products/${editing._id}`, editableFields);
         saved = res.data.data;
         toast.success('Producto actualizado');
       } else {
@@ -335,8 +336,8 @@ export default function Products() {
                   </div>
                   <div className="form-group">
                     <label className="form-label">Existencias disponibles *</label>
-                    <input type="number" min="0" className="form-input" value={form.current_stock} onChange={(e) => setForm({ ...form, current_stock: e.target.value })} required />
-                    <small className="form-help">Cantidad disponible para venta, por ejemplo 5 o 7.</small>
+                    <input type="number" min="0" className="form-input" value={form.current_stock} onChange={(e) => setForm({ ...form, current_stock: e.target.value })} readOnly={Boolean(editing)} required />
+                    <small className="form-help">{editing ? 'Las existencias se actualizan desde Movimientos para conservar el historial.' : 'Cantidad inicial disponible para venta, por ejemplo 5 o 7.'}</small>
                   </div>
                   <div className="form-group">
                     <label className="form-label">Alerta de stock mínimo</label>

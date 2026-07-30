@@ -102,24 +102,33 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
       return fallbackBanner;
     }
     async function loadHome() {
-      try {
-        const [catsRes,productsRes,banner]=await Promise.all([
-          fetch(`${API}/api/categories`),
-          fetch(`${API}/api/products?limit=6&status=active`),
-          fetchBanner()
-        ]);
-        if(!catsRes.ok||!productsRes.ok) throw new Error();
-        const [cats,products]=await Promise.all([catsRes.json(),productsRes.json()]);
-        renderCategories(cats.data||[]);
-        renderProducts(products.data||[]);
-        showBanner(banner);
-      } catch {
-        document.getElementById('featured-products').innerHTML='';
-        document.getElementById('home-error').hidden=false;
+      const [categoriesResult,productsResult,bannerResult]=await Promise.allSettled([
+        fetch(`${API}/api/categories`).then(response => {
+          if(!response.ok) throw new Error('categories');
+          return response.json();
+        }),
+        fetch(`${API}/api/products?limit=6&status=active`,{cache:'no-store'}).then(response => {
+          if(!response.ok) throw new Error('products');
+          return response.json();
+        }),
+        fetchBanner()
+      ]);
+
+      if(categoriesResult.status==='fulfilled') {
+        renderCategories(categoriesResult.value.data||[]);
+      } else {
         const rail=document.getElementById('category-rail');
         rail.querySelector('.category-loading')?.remove();
-        showBanner(fallbackBanner);
       }
+
+      if(productsResult.status==='fulfilled') {
+        renderProducts(productsResult.value.data||[]);
+      } else {
+        document.getElementById('featured-products').innerHTML='';
+        document.getElementById('home-error').hidden=false;
+      }
+
+      showBanner(bannerResult.status==='fulfilled' ? bannerResult.value : fallbackBanner);
     }
     loadHome();
   </script>

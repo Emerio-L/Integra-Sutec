@@ -1,16 +1,32 @@
 const Product = require('./product.model');
 
 function productPayload(body = {}) {
-  const payload = {
-    ...body,
-    sku: body.sku?.trim() || null,
-    category_id: body.category_id || null,
-    brand_id: body.brand_id || null,
-    minimum_stock: body.minimum_stock === '' || body.minimum_stock == null ? 5 : Number(body.minimum_stock),
-    cost_price: body.cost_price === '' || body.cost_price == null ? 0 : body.cost_price,
+  const relationId = (value) => value?._id || value?.id || value || null;
+  const numeric = (value, fallback, field) => {
+    const parsed = value === '' || value == null ? fallback : Number(value);
+    if (!Number.isFinite(parsed)) {
+      const error = new Error(`El campo ${field} debe contener un número válido.`);
+      error.statusCode = 400;
+      throw error;
+    }
+    return parsed;
   };
+  const payload = {};
+
+  if (Object.prototype.hasOwnProperty.call(body, 'sku')) payload.sku = body.sku?.trim() || null;
+  if (Object.prototype.hasOwnProperty.call(body, 'name')) payload.name = String(body.name || '').trim();
+  if (Object.prototype.hasOwnProperty.call(body, 'description')) payload.description = String(body.description || '');
+  if (Object.prototype.hasOwnProperty.call(body, 'category_id')) payload.category_id = relationId(body.category_id);
+  if (Object.prototype.hasOwnProperty.call(body, 'brand_id')) payload.brand_id = relationId(body.brand_id);
+  if (Object.prototype.hasOwnProperty.call(body, 'unit_price')) payload.unit_price = numeric(body.unit_price, 0, 'precio unitario');
+  if (Object.prototype.hasOwnProperty.call(body, 'cost_price')) payload.cost_price = numeric(body.cost_price, 0, 'costo');
+  if (Object.prototype.hasOwnProperty.call(body, 'minimum_stock')) {
+    payload.minimum_stock = Math.max(0, Math.trunc(numeric(body.minimum_stock, 5, 'stock mínimo')));
+  }
+  if (Object.prototype.hasOwnProperty.call(body, 'technical_specs')) payload.technical_specs = body.technical_specs || {};
+  if (Object.prototype.hasOwnProperty.call(body, 'status')) payload.status = body.status;
   if (body.current_stock !== undefined) {
-    payload.current_stock = body.current_stock === '' ? 0 : Math.max(0, Number(body.current_stock));
+    payload.current_stock = Math.max(0, Math.trunc(numeric(body.current_stock, 0, 'existencias disponibles')));
   }
   return payload;
 }
@@ -96,4 +112,4 @@ async function remove(req, res, next) {
   }
 }
 
-module.exports = { getAll, getById, create, update, remove };
+module.exports = { getAll, getById, create, update, remove, _test: { productPayload } };
