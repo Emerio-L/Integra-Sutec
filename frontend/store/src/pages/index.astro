@@ -50,12 +50,18 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
       'Seguridad':{theme:'security',icon:'<svg viewBox="0 0 64 64"><path d="M32 7 12 15v14c0 14 8 23 20 29 12-6 20-15 20-29V15z"/><path d="m22 31 7 7 14-17"/></svg>'},
     };
     const money = new Intl.NumberFormat('es-GT',{style:'currency',currency:'GTQ',minimumFractionDigits:2});
+    const categoryOrder = ['Niños','Deportes','Familia','Transporte','Empresas','Mascotas','Hogar','Seguridad'];
     const escapeHtml = (value='') => String(value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
     const imageUrl = (path) => path ? (path.startsWith('http') ? path : API + path) : '';
     function renderCategories(items) {
       const rail = document.getElementById('category-rail'); if (!rail) return;
-      rail.innerHTML = items.slice(0,8).map(cat => { const art=categoryArt[cat.name] || categoryArt.Empresas; return `<a class="category-card category-${art.theme}" href="/catalogo?category=${encodeURIComponent(cat._id)}"><span class="category-art">${art.icon}</span><span class="category-copy"><strong>${escapeHtml(cat.name)}</strong><small>${escapeHtml(cat.description || 'Soluciones para cada necesidad')}</small><em>Descubrir <b>→</b></em></span></a>`; }).join('');
-      const footer = document.getElementById('footer-categories'); if (footer) footer.innerHTML = items.slice(0,8).map(cat => `<a href="/catalogo?category=${encodeURIComponent(cat._id)}">${escapeHtml(cat.name)}</a>`).join('');
+      const ordered = [...items].sort((a,b) => {
+        const left = categoryOrder.indexOf(a.name);
+        const right = categoryOrder.indexOf(b.name);
+        return (left < 0 ? categoryOrder.length : left) - (right < 0 ? categoryOrder.length : right);
+      });
+      rail.innerHTML = ordered.slice(0,8).map(cat => { const art=categoryArt[cat.name] || categoryArt.Empresas; return `<a class="category-card category-${art.theme}" href="/catalogo?category=${encodeURIComponent(cat._id)}"><span class="category-art">${art.icon}</span><span class="category-copy"><strong>${escapeHtml(cat.name)}</strong><small>${escapeHtml(cat.description || 'Soluciones para cada necesidad')}</small><em>Descubrir <b>→</b></em></span></a>`; }).join('');
+      const footer = document.getElementById('footer-categories'); if (footer) footer.innerHTML = ordered.slice(0,8).map(cat => `<a href="/catalogo?category=${encodeURIComponent(cat._id)}">${escapeHtml(cat.name)}</a>`).join('');
     }
     function renderProducts(items) {
       const grid = document.getElementById('featured-products'); if (!grid) return;

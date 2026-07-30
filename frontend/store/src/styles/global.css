@@ -61,6 +61,8 @@
 .hero-media .hero-dynamic-media:after{display:none!important}
 .hero-media .hero-dynamic-media picture{overflow:visible}
 .hero-media .hero-dynamic-media picture img{display:block!important;width:94%!important;height:94%!important;max-width:94%!important;max-height:94%!important;padding:0!important;object-fit:contain!important;object-position:center!important;transform:perspective(1400px) rotateY(-8deg) rotateX(2deg) translateY(-2px)!important;transform-origin:center!important;filter:drop-shadow(0 34px 25px rgba(0,5,25,.52)) drop-shadow(-10px 7px 9px rgba(0,153,255,.2))!important}
+.hero-media .hero-image-media picture{isolation:auto!important}
+.hero-media .hero-image-media picture img{mix-blend-mode:multiply!important;filter:contrast(1.08) saturate(1.12) drop-shadow(0 34px 25px rgba(0,5,25,.52)) drop-shadow(-10px 7px 9px rgba(0,153,255,.2))!important;-webkit-mask-image:radial-gradient(ellipse 78% 80% at 50% 51%,#000 54%,rgba(0,0,0,.94) 72%,transparent 99%);mask-image:radial-gradient(ellipse 78% 80% at 50% 51%,#000 54%,rgba(0,0,0,.94) 72%,transparent 99%)}
 .hero-media .hero-dynamic-media video,.hero-media .hero-video-fallback{inset:3%!important;left:3%!important;top:3%!important;width:94%!important;height:94%!important;padding:0!important;object-fit:contain!important;transform:perspective(1400px) rotateY(-7deg) rotateX(1.5deg)!important;clip-path:none!important;border-radius:18px!important;mix-blend-mode:normal!important;filter:drop-shadow(0 32px 24px rgba(0,5,25,.5))!important}
 .hero-media .hero-video-media:before{display:none!important}
 
