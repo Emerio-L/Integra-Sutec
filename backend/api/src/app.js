@@ -30,6 +30,7 @@ const bannerRoutes       = bannerStorage === 'local'
 
 const app = express();
 const PORT = process.env.PORT || process.env.API_PORT || 4000;
+const RELEASE = process.env.RAILWAY_GIT_COMMIT_SHA || process.env.GIT_COMMIT_SHA || '2026-07-30-product-upload-fix';
 
 // ── Security ──
 app.use(helmet());
@@ -53,6 +54,10 @@ app.use(limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
+app.use((_req, res, next) => {
+  res.setHeader('X-Integra-Release', RELEASE);
+  next();
+});
 
 // ── Static Files (product images) ──
 // Must set CORS & disable helmet's crossOriginResourcePolicy so browsers
@@ -84,7 +89,7 @@ app.get('/api/v1/public/banners', bannerRoutes.publicList);
 
 // ── Health Check ──
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  res.set('Cache-Control', 'no-store').json({ status: 'ok', release: RELEASE, timestamp: new Date().toISOString() });
 });
 
 // ── Error Handler ──
