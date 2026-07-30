@@ -42,7 +42,8 @@ async function uploadFiles(req) {
   try {
     for (const [field, kind, prefix] of jobs) {
       const current = file(req, field); if (!current) continue;
-      const raw = kind === 'video' ? await media.uploadVideo(current.buffer) : await media.uploadImage(current.buffer, { poster: kind === 'poster' });
+      const imageBuffer = kind === 'image' ? await media.prepareBannerImage(current.buffer) : current.buffer;
+      const raw = kind === 'video' ? await media.uploadVideo(current.buffer) : await media.uploadImage(imageBuffer, { poster: kind === 'poster' });
       const data = resultData(raw, kind === 'video' ? 'video' : 'image');
       uploaded.push({ publicId: data.publicId, kind });
       values[`${prefix}Url`] = kind === 'poster' ? media.generatePosterUrl(data.publicId) : kind === 'image' ? media.generateImageUrl(data.publicId) : data.url;

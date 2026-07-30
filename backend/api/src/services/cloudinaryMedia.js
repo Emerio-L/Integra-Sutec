@@ -1,4 +1,5 @@
 const { v2: cloudinary } = require('cloudinary');
+const sharp = require('sharp');
 
 const FOLDERS = Object.freeze({
   image: 'integra-sutec/banners/images',
@@ -29,6 +30,57 @@ function uploadBuffer(buffer, options) {
     });
     stream.end(buffer);
   });
+}
+
+async function prepareBannerImage(buffer) {
+  const { data, info } = await sharp(buffer)
+    .rotate()
+    .resize({ width: 2000, height: 1200, fit: 'inside', withoutEnlargement: true })
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  const { width, height, channels } = info;
+  const total = width * height;
+  const visited = new Uint8Array(total);
+  const queue = new Int32Array(total);
+  let head = 0;
+  let tail = 0;
+  const isBackground = index => {
+    const offset = index * channels;
+    const red = data[offset];
+    const green = data[offset + 1];
+    const blue = data[offset + 2];
+    return Math.min(red, green, blue) >= 225 && Math.max(red, green, blue) - Math.min(red, green, blue) <= 30;
+  };
+  const enqueue = index => {
+    if (visited[index] || !isBackground(index)) return;
+    visited[index] = 1;
+    queue[tail++] = index;
+  };
+  for (let x = 0; x < width; x += 1) {
+    enqueue(x);
+    enqueue((height - 1) * width + x);
+  }
+  for (let y = 1; y < height - 1; y += 1) {
+    enqueue(y * width);
+    enqueue(y * width + width - 1);
+  }
+  while (head < tail) {
+    const index = queue[head++];
+    const offset = index * channels;
+    const lightness = Math.min(data[offset], data[offset + 1], data[offset + 2]);
+    data[offset + 3] = lightness >= 248 ? 0 : Math.max(0, Math.min(255, Math.round((248 - lightness) * 11)));
+    const x = index % width;
+    const y = Math.floor(index / width);
+    if (x > 0) enqueue(index - 1);
+    if (x < width - 1) enqueue(index + 1);
+    if (y > 0) enqueue(index - width);
+    if (y < height - 1) enqueue(index + width);
+  }
+  return sharp(data, { raw: { width, height, channels } })
+    .trim({ background: { r: 255, g: 255, b: 255, alpha: 0 } })
+    .webp({ quality: 92, alphaQuality: 100, smartSubsample: true })
+    .toBuffer();
 }
 
 const uploadImage = (buffer, options = {}) => uploadBuffer(buffer, {
@@ -73,4 +125,4 @@ function generateVideoUrl(publicId, width = 1600) {
   return cloudinary.url(publicId, { resource_type: 'video', secure: true, quality: 'auto', width, crop: 'limit' });
 }
 
-module.exports = { FOLDERS, uploadImage, uploadVideo, uploadProductImage, deleteImage, deleteVideo, deleteProductImage, replaceImage, replaceVideo, generateImageUrl, generateVideoUrl, generatePosterUrl };
+module.exports = { FOLDERS, prepareBannerImage, uploadImage, uploadVideo, uploadProductImage, deleteImage, deleteVideo, deleteProductImage, replaceImage, replaceVideo, generateImageUrl, generateVideoUrl, generatePosterUrl };

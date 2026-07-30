@@ -91,7 +91,7 @@ export default function Banners() {
   return <div className="simple-banner-page">
     <div className="mb-6">
       <h1 className="page-title">Imagen o video del banner</h1>
-      <p className="page-description">Cambia aquí el contenido visual que aparece en la portada.</p>
+      <p className="page-description">Al subir una imagen, el sistema elimina el fondo blanco conectado a los bordes, optimiza el archivo y lo integra al escenario 3D de la portada.</p>
     </div>
 
     <form className="card simple-banner-card" onSubmit={save}>

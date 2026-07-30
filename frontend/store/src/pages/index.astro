@@ -40,10 +40,10 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
 
   <script define:vars={{ API }}>
     const categoryArt = {
-      'Niños':{theme:'kids',icon:'<svg viewBox="0 0 64 64"><path d="M20 21c0-9 5-14 12-14s12 5 12 14v5c0 9-5 15-12 15s-12-6-12-15z"/><path d="M24 17c5 3 11 3 16 0M26 27h.1M38 27h.1M27 34c3 2 7 2 10 0M18 52c3-8 8-11 14-11s11 3 14 11"/><path d="M14 18c-4 2-5 8-2 12M50 18c4 2 5 8 2 12"/></svg>'},
+      'Niños':{theme:'kids',icon:'<svg viewBox="0 0 64 64"><path d="M18 25c0-10 6-17 14-17s14 7 14 17v4c0 10-6 17-14 17S18 39 18 29z"/><path d="M20 22c7 1 14-2 18-8 1 5 4 8 8 10M25 29h.1M39 29h.1M27 37c3 2 7 2 10 0"/><path d="M20 51c3-4 7-6 12-6s9 2 12 6M13 19c-4 3-5 9-2 14M51 19c4 3 5 9 2 14"/><path d="M12 12l4 2M52 12l-4 2M32 3v4"/></svg>'},
       'Deportes':{theme:'sports',icon:'<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="23"/><path d="m23 11 7 11-8 10-13-3M41 11l-7 11 8 10 13-3M22 53l8-11h4l8 11M22 32l8 10M42 32l-8 10"/></svg>'},
       'Familia':{theme:'family',icon:'<svg viewBox="0 0 64 64"><path d="M32 54S10 42 10 24c0-8 6-14 14-14 4 0 7 2 8 5 2-3 5-5 9-5 8 0 14 6 14 14 0 18-23 30-23 30z"/><path d="M22 29h20M32 19v20"/></svg>'},
-      'Vehículos':{theme:'vehicles',icon:'<svg viewBox="0 0 64 64"><path d="m13 44-4-4V28l7-15h32l7 15v12l-4 4zM17 28h30M19 37h.1M45 37h.1M16 44v7M48 44v7"/><path d="M21 13h22"/></svg>'},
+      'Transporte':{theme:'transport',icon:'<svg viewBox="0 0 64 64"><rect x="12" y="8" width="40" height="45" rx="9"/><path d="M12 30h40M19 19h26M20 40h.1M44 40h.1M20 53v5M44 53v5M7 24h5M52 24h5"/></svg>'},
       'Empresas':{theme:'business',icon:'<svg viewBox="0 0 64 64"><path d="M10 54V12h29v42M39 25h15v29M20 22h9M20 32h9M20 42h9M45 34h4M45 43h4M6 54h52"/></svg>'},
       'Mascotas':{theme:'pets',icon:'<svg viewBox="0 0 64 64"><circle cx="19" cy="19" r="7"/><circle cx="45" cy="19" r="7"/><circle cx="13" cy="35" r="6"/><circle cx="51" cy="35" r="6"/><path d="M21 50c0-10 5-17 11-17s11 7 11 17c0 7-6 7-11 3-5 4-11 4-11-3z"/></svg>'},
       'Hogar':{theme:'home',icon:'<svg viewBox="0 0 64 64"><path d="m7 29 25-20 25 20M13 25v30h38V25M24 55V37h16v18"/><path d="M19 31h7M38 31h7"/></svg>'},

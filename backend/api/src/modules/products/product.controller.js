@@ -1,7 +1,15 @@
 const Product = require('./product.model');
 
 function productPayload(body = {}) {
-  return { ...body, category_id: body.category_id || null, brand_id: body.brand_id || null };
+  const payload = {
+    ...body,
+    category_id: body.category_id || null,
+    brand_id: body.brand_id || null,
+    minimum_stock: body.minimum_stock === '' || body.minimum_stock == null ? 5 : Number(body.minimum_stock),
+    cost_price: body.cost_price === '' || body.cost_price == null ? 0 : body.cost_price,
+  };
+  if (body.current_stock !== undefined) payload.current_stock = Number(body.current_stock);
+  return payload;
 }
 
 async function getAll(req, res, next) {

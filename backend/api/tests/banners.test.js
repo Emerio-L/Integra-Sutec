@@ -2,7 +2,9 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
+const sharp = require('sharp');
 const { _test } = require('../src/modules/banners/banner.controller');
+const media = require('../src/services/cloudinaryMedia');
 const { IMAGE_MIMES, VIDEO_MIMES, LIMITS } = require('../src/middleware/bannerUpload');
 
 test('rechaza imagen sin archivo de escritorio', () => assert.throws(() => _test.validateRequired('IMAGE', {}), /imagen de escritorio/i));
@@ -21,4 +23,16 @@ test('el componente público fija reproducción segura y fallback', () => {
 test('la previsualización administrativa incluye controles', () => {
   const source = fs.readFileSync(path.join(__dirname, '../../../frontend/admin/src/pages/Banners.jsx'), 'utf8');
   assert.match(source, /playsInline controls/);
+});
+test('el procesamiento del banner elimina el fondo blanco exterior', async () => {
+  const input = await sharp({
+    create: { width: 80, height: 50, channels: 3, background: '#ffffff' },
+  }).composite([{ input: {
+    create: { width: 28, height: 28, channels: 3, background: '#1267e8' },
+  }, left: 26, top: 11 }]).jpeg().toBuffer();
+  const processed = await media.prepareBannerImage(input);
+  const { data, info } = await sharp(processed).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  assert.equal(data[3], 0);
+  const center = ((Math.floor(info.height / 2) * info.width) + Math.floor(info.width / 2)) * info.channels;
+  assert.ok(data[center + 3] > 240);
 });

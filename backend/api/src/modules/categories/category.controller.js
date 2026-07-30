@@ -3,7 +3,13 @@ const Category = require('./category.model');
 async function getAll(req, res, next) {
   try {
     const filter = { status: 'active' };
-    const categories = await Category.find(filter).sort('name').lean();
+    const categories = await Category.find(filter).lean();
+    const order = ['Niños', 'Deportes', 'Familia', 'Transporte', 'Empresas', 'Mascotas', 'Hogar', 'Seguridad'];
+    categories.sort((a, b) => {
+      const left = order.indexOf(a.name);
+      const right = order.indexOf(b.name);
+      return (left < 0 ? order.length : left) - (right < 0 ? order.length : right);
+    });
     res.json({ data: categories });
   } catch (error) {
     next(error);

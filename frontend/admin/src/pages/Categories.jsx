@@ -14,7 +14,7 @@ const formFields = [
     { value: 'kids', label: 'Niños' },
     { value: 'sports', label: 'Deportes' },
     { value: 'family', label: 'Familia' },
-    { value: 'vehicles', label: 'Vehículos' },
+    { value: 'transport', label: 'Transporte' },
     { value: 'business', label: 'Empresas' },
     { value: 'pets', label: 'Mascotas' },
     { value: 'home', label: 'Hogar' },

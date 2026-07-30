@@ -6,7 +6,7 @@ const categories = [
   ['Niños','Tecnología, aprendizaje y entretenimiento para los más pequeños','kids'],
   ['Deportes','Equipamiento y tecnología para una vida activa','sports'],
   ['Familia','Soluciones para compartir, cuidar y disfrutar en familia','family'],
-  ['Vehículos','Accesorios, seguridad y tecnología para tu vehículo','vehicles'],
+  ['Transporte','Movilidad, accesorios y tecnología para cada trayecto','transport'],
   ['Empresas','Equipos y soluciones para impulsar tu negocio','business'],
   ['Mascotas','Productos para el cuidado y bienestar de tus mascotas','pets'],
   ['Hogar','Tecnología y soluciones prácticas para cada espacio','home'],
@@ -17,6 +17,21 @@ const slug = value => value.toLowerCase().normalize('NFD').replace(/[\u0300-\u03
 
 async function seed() {
   if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL no está configurada.');
+  const [vehicles, transport] = await Promise.all([
+    prisma.category.findUnique({ where: { name: 'Vehículos' } }),
+    prisma.category.findUnique({ where: { name: 'Transporte' } }),
+  ]);
+  if (vehicles && !transport) {
+    await prisma.category.update({
+      where: { id: vehicles.id },
+      data: { name: 'Transporte', slug: 'transporte', description: 'Movilidad, accesorios y tecnología para cada trayecto', icon: 'transport', status: 'active' },
+    });
+  } else if (vehicles && transport) {
+    await prisma.$transaction([
+      prisma.product.updateMany({ where: { category_id: vehicles.id }, data: { category_id: transport.id } }),
+      prisma.category.delete({ where: { id: vehicles.id } }),
+    ]);
+  }
   const activeNames = categories.map(([name]) => name);
   const legacyCategories = await prisma.category.findMany({
     where: { name: { notIn: activeNames } },
