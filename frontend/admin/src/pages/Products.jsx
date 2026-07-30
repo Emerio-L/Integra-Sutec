@@ -13,20 +13,20 @@ export default function Products() {
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({
     sku: '', name: '', description: '', category_id: '', brand_id: '',
-    unit_price: '', cost_price: '', minimum_stock: 5,
+    unit_price: '', cost_price: '', current_stock: 0, minimum_stock: 5,
   });
 
   // Image upload state
   const [uploading, setUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
-  const [pendingImage, setPendingImage] = useState(null);
+  const [pendingImages, setPendingImages] = useState([]);
   const [savingProduct, setSavingProduct] = useState(false);
   const fileInputRef = useRef(null);
-  const pendingPreview = useMemo(() => pendingImage ? URL.createObjectURL(pendingImage) : '', [pendingImage]);
+  const pendingPreviews = useMemo(() => pendingImages.map((file) => URL.createObjectURL(file)), [pendingImages]);
 
   useEffect(() => () => {
-    if (pendingPreview) URL.revokeObjectURL(pendingPreview);
-  }, [pendingPreview]);
+    pendingPreviews.forEach((preview) => URL.revokeObjectURL(preview));
+  }, [pendingPreviews]);
 
   useEffect(() => { loadData(); }, []);
 
@@ -46,20 +46,20 @@ export default function Products() {
 
   function openCreate() {
     setEditing(null);
-    setPendingImage(null);
-    setForm({ sku: '', name: '', description: '', category_id: '', brand_id: '', unit_price: '', cost_price: '', minimum_stock: 5 });
+    setPendingImages([]);
+    setForm({ sku: '', name: '', description: '', category_id: '', brand_id: '', unit_price: '', cost_price: '', current_stock: 0, minimum_stock: 5 });
     setShowModal(true);
   }
 
   function openEdit(p) {
     setEditing(p);
-    setPendingImage(null);
+    setPendingImages([]);
     setForm({
-      sku: p.sku, name: p.name, description: p.description || '',
+      sku: p.sku || '', name: p.name, description: p.description || '',
       category_id: p.category_id?._id || p.category_id,
       brand_id: p.brand_id?._id || p.brand_id,
       unit_price: p.unit_price, cost_price: p.cost_price,
-      minimum_stock: p.minimum_stock,
+      current_stock: p.current_stock ?? 0, minimum_stock: p.minimum_stock,
     });
     setShowModal(true);
   }
@@ -76,9 +76,9 @@ export default function Products() {
       } else {
         const res = await api.post('/products', form);
         saved = res.data.data;
-        if (pendingImage) saved = await uploadImage(pendingImage, saved) || saved;
-        setPendingImage(null);
-        toast.success(pendingImage ? 'Producto e imagen creados correctamente' : 'Producto creado correctamente');
+        for (const image of pendingImages) saved = await uploadImage(image, saved) || saved;
+        setPendingImages([]);
+        toast.success(pendingImages.length ? 'Producto e imágenes creados correctamente' : 'Producto creado correctamente');
       }
       // Re-open in edit mode so user can add images immediately after creating
       if (!editing && saved) {
@@ -104,7 +104,7 @@ export default function Products() {
       return;
     }
     if (!target?._id) {
-      setPendingImage(file);
+      setPendingImages((current) => current.length >= 5 ? current : [...current, file]);
       toast.success('Imagen lista para subir al crear el producto');
       return;
     }
@@ -141,6 +141,16 @@ export default function Products() {
     } catch { toast.error('Error al eliminar imagen'); }
   }
 
+  async function handleFiles(fileList) {
+    const available = editing ? Math.max(0, 5 - currentImages.length) : Math.max(0, 5 - pendingImages.length);
+    const files = Array.from(fileList).slice(0, available);
+    if (!files.length) return toast.error('Puedes agregar un máximo de 5 imágenes');
+    let target = editing;
+    for (const file of files) {
+      target = await uploadImage(file, target) || target;
+    }
+  }
+
   async function handleDelete(id) {
     if (!confirm('¿Desactivar este producto?')) return;
     try {
@@ -153,8 +163,7 @@ export default function Products() {
   function handleDrop(e) {
     e.preventDefault();
     setDragOver(false);
-    const file = e.dataTransfer.files[0];
-    if (file) uploadImage(file);
+    handleFiles(e.dataTransfer.files);
   }
 
   function formatQ(n) { return `Q${Number(n).toFixed(2)}`; }
@@ -202,7 +211,7 @@ export default function Products() {
                     </div>
                   )}
                 </td>
-                <td><span className="badge badge-gray">{p.sku}</span></td>
+                <td><span className="badge badge-gray">{p.sku || '—'}</span></td>
                 <td style={{ fontWeight: 600 }}>{p.name}</td>
                 <td>{p.category_id?.name || '—'}</td>
                 <td>{p.brand_id?.name || '—'}</td>
@@ -250,10 +259,10 @@ export default function Products() {
               <div className="modal-body product-editor-body">
                 <section className="product-media-panel">
                   <div className="product-media-heading">
-                    <div><span>Imagen del producto</span><small>{editing ? `${currentImages.length} de 5 imágenes` : 'Puedes agregarla antes de crear'}</small></div>
-                    {(editing ? currentImages.length < 5 : true) && <button type="button" className="btn btn-secondary btn-sm" onClick={() => fileInputRef.current?.click()} disabled={uploading}>Seleccionar</button>}
+                    <div><span>Imágenes del producto</span><small>{editing ? `${currentImages.length} de 5 imágenes` : `${pendingImages.length} de 5 seleccionadas`}</small></div>
+                    {(editing ? currentImages.length < 5 : pendingImages.length < 5) && <button type="button" className="btn btn-secondary btn-sm" onClick={() => fileInputRef.current?.click()} disabled={uploading}>Seleccionar</button>}
                   </div>
-                  <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp,image/avif" style={{ display: 'none' }} onChange={(e) => { if (e.target.files[0]) uploadImage(e.target.files[0]); }} />
+                  <input ref={fileInputRef} type="file" multiple accept="image/jpeg,image/png,image/webp,image/avif" style={{ display: 'none' }} onChange={(e) => handleFiles(e.target.files)} />
                   <div
                     className={`product-drop-zone ${dragOver ? 'dragging' : ''}`}
                     onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
@@ -261,10 +270,13 @@ export default function Products() {
                     onDrop={handleDrop}
                     onClick={() => fileInputRef.current?.click()}
                   >
-                    {pendingPreview ? (
-                      <div className="pending-product-image">
-                        <img src={pendingPreview} alt="Imagen seleccionada" />
-                        <span>Lista para subir</span>
+                    {pendingPreviews.length ? (
+                      <div className="product-image-gallery">
+                        {pendingPreviews.map((preview, idx) => <div className={idx === 0 ? 'product-image-tile principal' : 'product-image-tile'} key={preview} onClick={(e) => e.stopPropagation()}>
+                          <img src={preview} alt={`Imagen seleccionada ${idx + 1}`} />
+                          {idx === 0 && <span>Principal</span>}
+                          <button type="button" onClick={() => setPendingImages((items) => items.filter((_, index) => index !== idx))} aria-label={`Quitar foto ${idx + 1}`}>×</button>
+                        </div>)}
                       </div>
                     ) : currentImages.length ? (
                       <div className="product-image-gallery">
@@ -279,21 +291,21 @@ export default function Products() {
                     ) : (
                       <div className="product-drop-empty">
                         <span className="product-upload-icon">↥</span>
-                        <strong>Arrastra una imagen aquí</strong>
-                        <small>o haz clic para seleccionarla</small>
+                        <strong>Arrastra una o varias imágenes aquí</strong>
+                        <small>o haz clic para seleccionarlas</small>
                         <em>JPG, PNG, WebP o AVIF · máximo 5 MB</em>
                       </div>
                     )}
                     {uploading && <div className="product-uploading">Procesando imagen…</div>}
                   </div>
-                  {pendingImage && <button type="button" className="clear-pending-image" onClick={() => setPendingImage(null)}>Quitar imagen seleccionada</button>}
+                  {pendingImages.length > 0 && <button type="button" className="clear-pending-image" onClick={() => setPendingImages([])}>Quitar imágenes seleccionadas</button>}
                 </section>
 
                 {/* ── Form fields ── */}
                 <div className="product-fields-grid">
                   <div className="form-group">
-                    <label className="form-label">SKU *</label>
-                    <input className="form-input" value={form.sku} onChange={(e) => setForm({ ...form, sku: e.target.value })} required />
+                    <label className="form-label">SKU <span className="optional-label">Opcional</span></label>
+                    <input className="form-input" placeholder="Código interno, si aplica" value={form.sku} onChange={(e) => setForm({ ...form, sku: e.target.value })} />
                   </div>
                   <div className="form-group">
                     <label className="form-label">Nombre *</label>
@@ -322,8 +334,14 @@ export default function Products() {
                     <input type="number" step="0.01" className="form-input" value={form.cost_price} onChange={(e) => setForm({ ...form, cost_price: e.target.value })} />
                   </div>
                   <div className="form-group">
-                    <label className="form-label">Stock mínimo</label>
-                    <input type="number" className="form-input" value={form.minimum_stock} onChange={(e) => setForm({ ...form, minimum_stock: e.target.value })} />
+                    <label className="form-label">Existencias disponibles *</label>
+                    <input type="number" min="0" className="form-input" value={form.current_stock} onChange={(e) => setForm({ ...form, current_stock: e.target.value })} required />
+                    <small className="form-help">Cantidad disponible para venta, por ejemplo 5 o 7.</small>
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Alerta de stock mínimo</label>
+                    <input type="number" min="0" className="form-input" value={form.minimum_stock} onChange={(e) => setForm({ ...form, minimum_stock: e.target.value })} />
+                    <small className="form-help">Solo indica cuándo mostrar una alerta de inventario bajo.</small>
                   </div>
                 </div>
                 <div className="form-group product-description-field">
@@ -331,7 +349,7 @@ export default function Products() {
                   <textarea className="form-input product-description-input" rows="4" placeholder="Describe beneficios, uso y características principales…" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
                 </div>
 
-                {!editing && <p className="product-create-note">El producto y la imagen seleccionada se guardarán juntos.</p>}
+                {!editing && <p className="product-create-note">El producto y las imágenes seleccionadas se guardarán juntos. La primera será la imagen principal.</p>}
               </div>
 
               <div className="modal-footer">

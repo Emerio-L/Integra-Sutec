@@ -446,6 +446,12 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
     overflow: hidden;
     height: 38px;
   }
+  .pcard-description {
+    height: 54px; margin: 0 0 10px;
+    color: #64748b; font-size: 12px; line-height: 1.5;
+    display: -webkit-box; -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical; overflow: hidden;
+  }
   .pcard-price {
     font-family: 'Outfit', sans-serif;
     font-size: 18px; font-weight: 800;
@@ -731,7 +737,9 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
       document.getElementById('lb-name').textContent = product.name;
       document.getElementById('lb-description').textContent = product.description || 'Una solución seleccionada para brindarte calidad, respaldo y excelente desempeño.';
       document.getElementById('lb-brand').textContent = product.brand_id?.name ? 'Marca · ' + product.brand_id.name : 'Sin marca asignada';
-      document.getElementById('lb-sku').textContent = 'SKU · ' + product.sku;
+      var skuEl = document.getElementById('lb-sku');
+      skuEl.textContent = product.sku ? 'SKU · ' + product.sku : '';
+      skuEl.style.display = product.sku ? 'inline-flex' : 'none';
       document.getElementById('lb-price').textContent = formatQ(product.unit_price);
       var detailAdd = document.getElementById('lb-add');
       detailAdd.dataset.addProduct = product._id;
@@ -830,6 +838,7 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
       + '<div class="pcard-body">'
           + '<div class="pcard-cat-label">' + (catName || 'General') + '</div>'
           + '<div class="pcard-name" title="' + p.name + '">' + p.name + '</div>'
+          + '<p class="pcard-description">' + (p.description || 'Conoce los detalles y beneficios de este producto.') + '</p>'
           + '<div class="pcard-price">' + formatQ(p.unit_price) + '</div>'
           + '<button id="add-' + p._id + '" class="add-btn" data-add-product="' + p._id + '" ' + (isOut ? 'disabled' : '') + '>'
           + (isOut ? '🚫 Sin disponibilidad' : '🛒 Agregar al carrito')
@@ -842,7 +851,7 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
   function applyFilters() {
     var q = document.getElementById('search-input').value.toLowerCase().trim();
     var filtered = allProducts.filter(function(p){
-      var mQ = !q || p.name.toLowerCase().indexOf(q)>=0 || p.sku.toLowerCase().indexOf(q)>=0 || (p.description||'').toLowerCase().indexOf(q)>=0;
+      var mQ = !q || p.name.toLowerCase().indexOf(q)>=0 || (p.sku||'').toLowerCase().indexOf(q)>=0 || (p.description||'').toLowerCase().indexOf(q)>=0;
       var mC = !activeCat   || (p.category_id&&p.category_id._id)===activeCat;
       var mB = !activeBrand || (p.brand_id&&p.brand_id._id)===activeBrand;
       return mQ&&mC&&mB;
@@ -921,6 +930,10 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
       document.getElementById('loading-state').style.display='none';
       setActiveFilter('cat',''); setActiveFilter('brand','');
       applyFilters(); updateCartUI();
+      var requestedProduct = new URLSearchParams(window.location.search).get('product');
+      if (requestedProduct && allProducts.some(function(product){ return product._id === requestedProduct; })) {
+        openLightbox(requestedProduct, 0);
+      }
     } catch(err) {
       document.getElementById('loading-state').style.display='none';
       document.getElementById('error-state').style.display='block';

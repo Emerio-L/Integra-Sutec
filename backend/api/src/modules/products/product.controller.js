@@ -3,12 +3,15 @@ const Product = require('./product.model');
 function productPayload(body = {}) {
   const payload = {
     ...body,
+    sku: body.sku?.trim() || null,
     category_id: body.category_id || null,
     brand_id: body.brand_id || null,
     minimum_stock: body.minimum_stock === '' || body.minimum_stock == null ? 5 : Number(body.minimum_stock),
     cost_price: body.cost_price === '' || body.cost_price == null ? 0 : body.cost_price,
   };
-  if (body.current_stock !== undefined) payload.current_stock = Number(body.current_stock);
+  if (body.current_stock !== undefined) {
+    payload.current_stock = body.current_stock === '' ? 0 : Math.max(0, Number(body.current_stock));
+  }
   return payload;
 }
 

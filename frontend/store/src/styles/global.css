@@ -17,6 +17,13 @@
 @media(max-width:480px){.brand small{display:none}.cart-btn{font-size:0;padding:0 10px}.cart-btn span{font-size:11px}.featured-grid{grid-template-columns:1fr 1fr;gap:8px}.product-card{padding:10px;height:225px}.product-image{height:105px}.product-bottom strong{font-size:14px}.benefit-bar{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
 
+/* Product discovery: three-line summaries and visible multi-photo affordance */
+.product-card{height:250px}
+.product-image{position:relative}
+.product-card p{height:48px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.quick-cart{width:auto;min-width:38px;padding:0 9px;font-size:10px;font-weight:800}
+.home-photo-count{position:absolute;left:4px;bottom:4px;padding:3px 7px;border-radius:999px;background:rgba(3,19,47,.8);color:#fff;font-size:9px;font-style:normal;font-weight:800}
+
 /* Official transparent brand assets */
 .brand-logo{display:block;width:255px;height:78px;object-fit:contain;object-position:left center}
 .footer-logo{display:block;width:180px;height:60px;object-fit:contain;object-position:left center}
