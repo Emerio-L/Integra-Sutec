@@ -1,5 +1,9 @@
 const Product = require('./product.model');
 
+function productPayload(body = {}) {
+  return { ...body, category_id: body.category_id || null, brand_id: body.brand_id || null };
+}
+
 async function getAll(req, res, next) {
   try {
     const {
@@ -52,7 +56,7 @@ async function getById(req, res, next) {
 
 async function create(req, res, next) {
   try {
-    const product = await Product.create(req.body);
+    const product = await Product.create(productPayload(req.body));
     res.status(201).json({ data: product });
   } catch (error) {
     next(error);
@@ -61,7 +65,7 @@ async function create(req, res, next) {
 
 async function update(req, res, next) {
   try {
-    const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+    const product = await Product.findByIdAndUpdate(req.params.id, productPayload(req.body), {
       new: true, runValidators: true,
     });
     if (!product) return res.status(404).json({ error: 'Producto no encontrado' });

@@ -8,13 +8,6 @@ const values = [
   { icon: '💎', title: 'Valores', text: 'Integridad, compromiso, innovación, servicio al cliente y trabajo en equipo son los pilares que guían nuestras operaciones.' },
 ];
 
-const timeline = [
-  { year: '2015', title: 'Fundación', desc: 'Integra Sutec nace como distribuidor de suministros tecnológicos en Ciudad de Guatemala.' },
-  { year: '2017', title: 'Expansión de Marcas', desc: 'Consolidamos alianzas con HP, Dell, Cisco y otras marcas líderes del mercado.' },
-  { year: '2020', title: 'Transformación Digital', desc: 'Lanzamos nuestra plataforma digital para atender clientes en toda Guatemala.' },
-  { year: '2023', title: 'Crecimiento Corporativo', desc: 'Superamos los 200 clientes corporativos activos y ampliamos nuestro catálogo.' },
-  { year: '2026', title: 'Innovación Continua', desc: 'Nuevas soluciones en infraestructura de red, seguridad y servicios administrados.' },
-];
 ---
 
 <BaseLayout title="Nosotros — Integra Sutec" description="Conoce a Integra en Suministros y Tecnología, S.A. Tu socio estratégico en tecnología en Guatemala.">
@@ -24,9 +17,6 @@ const timeline = [
       <h1 class="font-display text-3xl md:text-5xl font-bold text-white mb-4 animate-slide-up">
         Sobre <span class="gradient-text">Integra Sutec</span>
       </h1>
-      <p class="text-dark-300 text-lg max-w-2xl mx-auto animate-slide-up" style="animation-delay: 0.15s;">
-        Más de una década equipando empresas guatemaltecas con tecnología de primer nivel.
-      </p>
     </div>
   </section>
 
@@ -43,33 +33,65 @@ const timeline = [
     </div>
   </section>
 
-  <!-- About Text -->
+  <!-- Purpose -->
   <section class="bg-dark-50/50 py-20">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 class="section-title text-center mb-8">Nuestra <span class="gradient-text">Historia</span></h2>
-      <p class="text-dark-600 leading-relaxed text-center text-lg mb-16">
-        <strong class="text-dark-900">Integra en Suministros y Tecnología, S.A.</strong> fue fundada con la visión
-        de ser el puente entre las mejores marcas tecnológicas del mundo y las empresas guatemaltecas que necesitan
-        soluciones confiables. Desde entonces, hemos construido relaciones de largo plazo basadas en confianza,
-        calidad y servicio excepcional.
-      </p>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(360px,0.85fr)] gap-10 lg:gap-14 items-start">
+        <div>
+          <h2 class="section-title mb-8">Tecnología con <span class="gradient-text">propósito</span></h2>
+          <div class="space-y-5 text-dark-600 leading-relaxed text-base md:text-lg">
+            <p>
+              <strong class="text-dark-900">Integra en Suministros y Tecnología, S.A.</strong> nace con el propósito de acercar al mercado guatemalteco soluciones tecnológicas útiles, confiables y adaptadas a necesidades reales.
+            </p>
+            <p>
+              Detrás de Integra Sutec hay conocimientos en tecnología, soporte técnico y soluciones digitales, junto con una comprensión de lo que las personas y las empresas buscan al elegir un producto tecnológico.
+            </p>
+            <p>
+              Nuestro enfoque no consiste únicamente en incorporar dispositivos a un catálogo. Buscamos comprender para qué sirven, qué necesidad resuelven y qué valor pueden aportar a la vida diaria de nuestros clientes.
+            </p>
+            <p>
+              Comenzamos con productos de tecnología inteligente y continuaremos ampliando nuestro catálogo hacia soluciones para niños, deporte, familia, transporte, empresas, mascotas, hogar y seguridad.
+            </p>
+            <p>
+              Estamos construyendo nuestra trayectoria con transparencia, atención cercana y mejora continua. Queremos que la confianza en Integra Sutec se forme a partir de lo que realmente ofrecemos y de la experiencia que brindamos antes, durante y después de cada compra.
+            </p>
+          </div>
+        </div>
 
-      <!-- Timeline -->
-      <div class="space-y-8">
-        {timeline.map((item, i) => (
-          <div class="flex gap-6 items-start group">
-            <div class="flex-shrink-0 w-20 text-right">
-              <span class="font-display font-bold text-xl text-primary-600">{item.year}</span>
+        <aside class="card p-7 md:p-8 lg:sticky lg:top-28">
+          <div class="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-primary-100 text-primary-700 mb-5">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 3 4 7v5c0 4.5 3 7.5 8 9 5-1.5 8-4.5 8-9V7z"/><path d="m9 12 2 2 4-5"/>
+            </svg>
+          </div>
+          <h3 class="font-display text-2xl font-bold text-dark-900 mb-6">Nuestro enfoque</h3>
+          <div class="space-y-6">
+            <div class="flex gap-4">
+              <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-primary-50 text-primary-600 grid place-items-center">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4M8.5 14.5A7 7 0 1 1 15.5 14.5C14.6 15.2 14 16.1 14 17h-4c0-.9-.6-1.8-1.5-2.5z"/></svg>
+              </div>
+              <div><h4 class="font-semibold text-dark-900 mb-1">Utilidad real</h4><p class="text-sm leading-relaxed text-dark-500">Seleccionamos productos que respondan a necesidades concretas y aporten beneficios prácticos.</p></div>
             </div>
-            <div class="flex-shrink-0 mt-1.5">
-              <div class="w-3 h-3 rounded-full bg-primary-500 ring-4 ring-primary-100 group-hover:ring-primary-200 transition-all"></div>
+            <div class="flex gap-4">
+              <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-primary-50 text-primary-600 grid place-items-center">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12 5 5L20 6"/><path d="M20 12a8 8 0 1 1-4-7"/></svg>
+              </div>
+              <div><h4 class="font-semibold text-dark-900 mb-1">Selección responsable</h4><p class="text-sm leading-relaxed text-dark-500">Evaluamos la funcionalidad, calidad y relación de valor antes de incorporar un producto.</p></div>
             </div>
-            <div class="pb-6">
-              <h4 class="font-semibold text-dark-900 mb-1">{item.title}</h4>
-              <p class="text-sm text-dark-500">{item.desc}</p>
+            <div class="flex gap-4">
+              <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-primary-50 text-primary-600 grid place-items-center">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 15a4 4 0 0 1-4 4H8l-4 3v-7a4 4 0 0 1-2-3.5v-3A4.5 4.5 0 0 1 6.5 4h9A4.5 4.5 0 0 1 20 8.5z"/><path d="M7 10h.01M11 10h.01M15 10h.01"/></svg>
+              </div>
+              <div><h4 class="font-semibold text-dark-900 mb-1">Atención cercana</h4><p class="text-sm leading-relaxed text-dark-500">Orientamos a nuestros clientes para que puedan elegir y aprovechar mejor cada solución.</p></div>
+            </div>
+            <div class="flex gap-4">
+              <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-primary-50 text-primary-600 grid place-items-center">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 0 1 13.6-5.7L20 9M20 4v5h-5M20 12a8 8 0 0 1-13.6 5.7L4 15M4 20v-5h5"/></svg>
+              </div>
+              <div><h4 class="font-semibold text-dark-900 mb-1">Evolución constante</h4><p class="text-sm leading-relaxed text-dark-500">Incorporamos nuevas categorías de acuerdo con las necesidades reales del mercado.</p></div>
             </div>
           </div>
-        ))}
+        </aside>
       </div>
     </div>
   </section>
@@ -77,9 +99,12 @@ const timeline = [
   <!-- CTA -->
   <section class="bg-gradient-to-r from-primary-600 to-primary-800 py-16">
     <div class="max-w-4xl mx-auto px-4 text-center">
-      <h2 class="font-display text-2xl md:text-3xl font-bold text-white mb-4">¿Quieres saber más?</h2>
-      <p class="text-primary-100 mb-8">Contáctanos y descubre cómo podemos ayudar a tu empresa.</p>
-      <a href="/contacto" class="btn-accent px-8 py-4">Contáctanos</a>
+      <h2 class="font-display text-2xl md:text-3xl font-bold text-white mb-4">¿Buscas una solución tecnológica?</h2>
+      <p class="text-primary-100 mb-8">Explora nuestros productos o contáctanos para encontrar una opción adecuada para ti, tu familia o tu empresa.</p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+        <a href="/catalogo" class="btn-accent px-8 py-4">Ver productos</a>
+        <a href="/contacto" class="inline-flex items-center justify-center px-8 py-4 rounded-xl border border-white/40 text-white font-semibold hover:bg-white/10 transition-colors">Contáctanos</a>
+      </div>
     </div>
   </section>
 </BaseLayout>

@@ -35,7 +35,7 @@ async function getMetrics(req, res, next) {
     }
     const categoryMap = new Map();
     for (const product of products) {
-      const key = product.category.name;
+      const key = product.category?.name || 'Sin categoría';
       const item = categoryMap.get(key) || { _id: key, total_stock: 0, products_count: 0, total_value: 0 };
       item.total_stock += product.current_stock; item.products_count += 1; item.total_value += product.current_stock * number(product.cost_price);
       categoryMap.set(key, item);

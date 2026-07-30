@@ -1,0 +1,2 @@
+ALTER TABLE "Product" ALTER COLUMN "category_id" DROP NOT NULL;
+ALTER TABLE "Product" ALTER COLUMN "brand_id" DROP NOT NULL;

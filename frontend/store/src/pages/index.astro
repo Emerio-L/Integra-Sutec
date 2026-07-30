@@ -37,15 +37,24 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
 
   <script define:vars={{ API }}>
     const categoryColors = ['blue','mint','violet','orange'];
-    const categorySymbols = ['⌚','▦','◇','▣'];
+    const categoryIcons = {
+      kids:'<svg viewBox="0 0 24 24"><path d="M9 3h6M12 3v3M6.5 10a5.5 5.5 0 0 1 11 0v2a5.5 5.5 0 0 1-11 0z"/><path d="M9.2 11h.01M14.8 11h.01M9.5 14.5c1.4 1 3.6 1 5 0"/></svg>',
+      sports:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="m8.5 5 2 3.5-2 3.5-4-.5M15.5 5l-2 3.5 2 3.5 4-.5M8.5 19l2-3.5h3L15.5 19"/></svg>',
+      family:'<svg viewBox="0 0 24 24"><path d="M12 20s-7-4.2-7-10a4 4 0 0 1 7-2.7A4 4 0 0 1 19 10c0 5.8-7 10-7 10z"/><path d="M9.5 11.5h5M12 9v5"/></svg>',
+      vehicles:'<svg viewBox="0 0 24 24"><path d="m5 16-1-1v-4l2-5h12l2 5v4l-1 1zM7 11h10M7.5 14h.01M16.5 14h.01M6 16v2M18 16v2"/></svg>',
+      business:'<svg viewBox="0 0 24 24"><path d="M4 20V7h10v13M14 11h6v9M8 10h2M8 14h2M8 18h2M17 14h1M17 17h1"/></svg>',
+      pets:'<svg viewBox="0 0 24 24"><circle cx="7" cy="8" r="2"/><circle cx="17" cy="8" r="2"/><circle cx="5" cy="13" r="1.7"/><circle cx="19" cy="13" r="1.7"/><path d="M8 18c0-3 2-5 4-5s4 2 4 5c0 2-2 2-4 1-2 1-4 1-4-1z"/></svg>',
+      home:'<svg viewBox="0 0 24 24"><path d="m3 11 9-7 9 7M5.5 9.5V20h13V9.5M9 20v-6h6v6"/></svg>',
+      security:'<svg viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.7 2.8 8 7 10 4.2-2 7-5.3 7-10V6z"/><path d="m9 12 2 2 4-5"/></svg>',
+    };
     const money = new Intl.NumberFormat('es-GT',{style:'currency',currency:'GTQ',minimumFractionDigits:2});
     const escapeHtml = (value='') => String(value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
     const imageUrl = (path) => path ? (path.startsWith('http') ? path : API + path) : '';
     function renderCategories(items) {
       const rail = document.getElementById('category-rail'); if (!rail) return;
       const first = rail.querySelector('.all-categories')?.outerHTML || '';
-      rail.innerHTML = first + items.slice(0,4).map((cat,i) => `<a class="category-item" href="/catalogo?category=${encodeURIComponent(cat._id)}"><span class="category-icon ${categoryColors[i]}">${categorySymbols[i]}</span><p><strong>${escapeHtml(cat.name)}</strong><small>${escapeHtml(cat.description || 'Tecnología para todos')}</small><em>Ver productos →</em></p></a>`).join('');
-      const footer = document.getElementById('footer-categories'); if (footer) footer.innerHTML = items.slice(0,4).map(cat => `<a href="/catalogo?category=${encodeURIComponent(cat._id)}">${escapeHtml(cat.name)}</a>`).join('');
+      rail.innerHTML = first + items.slice(0,8).map((cat,i) => `<a class="category-item" href="/catalogo?category=${encodeURIComponent(cat._id)}"><span class="category-icon ${categoryColors[i%categoryColors.length]}">${categoryIcons[cat.icon] || categoryIcons.business}</span><p><strong>${escapeHtml(cat.name)}</strong><small>${escapeHtml(cat.description || 'Soluciones para cada necesidad')}</small><em>Explorar →</em></p></a>`).join('');
+      const footer = document.getElementById('footer-categories'); if (footer) footer.innerHTML = items.slice(0,8).map(cat => `<a href="/catalogo?category=${encodeURIComponent(cat._id)}">${escapeHtml(cat.name)}</a>`).join('');
     }
     function renderProducts(items) {
       const grid = document.getElementById('featured-products'); if (!grid) return;

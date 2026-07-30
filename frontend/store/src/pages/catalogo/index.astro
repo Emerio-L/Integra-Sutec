@@ -251,15 +251,28 @@ import '../../styles/global.css';
   </div>
 </div>
 
-<!-- ═══ LIGHTBOX ═══ -->
-<div id="lightbox" onclick="if(event.target===this)closeLightbox()" style="display:none;position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,0.90);backdrop-filter:blur(14px);align-items:center;justify-content:center;padding:16px;">
-  <button onclick="closeLightbox()" style="position:absolute;top:16px;right:20px;background:rgba(255,255,255,0.13);border:1px solid rgba(255,255,255,0.22);color:white;width:44px;height:44px;border-radius:50%;cursor:pointer;font-size:20px;z-index:1;display:flex;align-items:center;justify-content:center;transition:background 0.2s;line-height:1;">✕</button>
-  <button id="lb-prev" onclick="navigateLightbox(-1)" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.13);border:1px solid rgba(255,255,255,0.22);color:white;width:52px;height:52px;border-radius:50%;cursor:pointer;font-size:30px;display:none;align-items:center;justify-content:center;transition:background 0.2s;line-height:1;">‹</button>
-  <div style="display:flex;flex-direction:column;align-items:center;gap:16px;max-width:90vw;width:100%;">
-    <img id="lb-image" src="" alt="Imagen ampliada" style="max-height:80vh;max-width:100%;border-radius:16px;object-fit:contain;box-shadow:0 28px 80px rgba(0,0,0,0.6);transition:opacity 0.18s;" />
-    <div id="lb-dots" style="display:flex;gap:8px;min-height:16px;"></div>
-  </div>
-  <button id="lb-next" onclick="navigateLightbox(1)" style="position:absolute;right:16px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.13);border:1px solid rgba(255,255,255,0.22);color:white;width:52px;height:52px;border-radius:50%;cursor:pointer;font-size:30px;display:none;align-items:center;justify-content:center;transition:background 0.2s;line-height:1;">›</button>
+<!-- ═══ PRODUCT DETAIL MODAL ═══ -->
+<div id="lightbox" onclick="if(event.target===this)closeLightbox()" class="product-detail-overlay">
+  <article class="product-detail-modal">
+    <button onclick="closeLightbox()" class="product-detail-close" aria-label="Cerrar">✕</button>
+    <div class="product-detail-visual">
+      <button id="lb-prev" onclick="navigateLightbox(-1)" class="product-detail-arrow prev" aria-label="Imagen anterior">‹</button>
+      <img id="lb-image" src="" alt="Imagen ampliada" />
+      <button id="lb-next" onclick="navigateLightbox(1)" class="product-detail-arrow next" aria-label="Imagen siguiente">›</button>
+      <div id="lb-dots" class="product-detail-dots"></div>
+    </div>
+    <div class="product-detail-info">
+      <span id="lb-category" class="product-detail-category"></span>
+      <h2 id="lb-name"></h2>
+      <p id="lb-description" class="product-detail-description"></p>
+      <div class="product-detail-meta">
+        <span id="lb-brand"></span><span id="lb-sku"></span>
+      </div>
+      <strong id="lb-price" class="product-detail-price"></strong>
+      <button id="lb-add" class="add-btn product-detail-add">Agregar al carrito</button>
+      <small>Compra segura · Garantía local · Atención personalizada</small>
+    </div>
+  </article>
 </div>
 
 </BaseLayout>
@@ -509,11 +522,26 @@ import '../../styles/global.css';
     transition: background 0.2s, transform 0.2s;
   }
   .lb-dot-active { background: white !important; transform: scale(1.4); }
+  .product-detail-overlay{display:none;position:fixed;inset:0;z-index:3000;background:rgba(3,12,30,.78);backdrop-filter:blur(16px);align-items:center;justify-content:center;padding:20px}
+  .product-detail-modal{position:relative;width:min(1020px,96vw);max-height:90vh;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(330px,.85fr);overflow:hidden;background:#fff;border:1px solid rgba(255,255,255,.5);border-radius:28px;box-shadow:0 40px 120px rgba(0,0,0,.48)}
+  .product-detail-visual{position:relative;min-height:560px;display:grid;place-items:center;padding:54px;background:radial-gradient(circle at 50% 45%,#fff 0,#f4f8ff 58%,#e7eefb 100%)}
+  .product-detail-visual>img{width:100%;height:100%;max-height:450px;object-fit:contain;filter:drop-shadow(0 28px 24px rgba(26,53,93,.2));transition:opacity .18s}
+  .product-detail-info{padding:62px 48px 44px;display:flex;flex-direction:column;align-items:flex-start;background:linear-gradient(160deg,#fff,#f8fbff)}
+  .product-detail-category{padding:6px 11px;border-radius:999px;background:#e9f1ff;color:#155ad1;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+  .product-detail-info h2{font:800 clamp(25px,3vw,36px)/1.08 Outfit;margin:18px 0 14px;color:#071a3d;letter-spacing:-.6px}
+  .product-detail-description{font-size:14px;line-height:1.7;color:#5c6b82;margin:0 0 22px}
+  .product-detail-meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}.product-detail-meta span{padding:7px 10px;border:1px solid #e0e7f1;border-radius:9px;color:#66758c;font-size:11px}
+  .product-detail-price{font:800 30px Outfit;color:#104aeb;margin-top:auto}
+  .product-detail-add{width:100%;margin:18px 0 12px;padding:15px!important;font-size:14px!important}.product-detail-info small{align-self:center;color:#8a97aa;font-size:10px}
+  .product-detail-close{position:absolute;right:18px;top:18px;z-index:5;width:38px;height:38px;border:1px solid #e0e7f1;border-radius:50%;background:rgba(255,255,255,.9);color:#314057;cursor:pointer}
+  .product-detail-arrow{position:absolute;top:50%;z-index:3;width:42px;height:42px;border:1px solid #d7e0ed;border-radius:50%;background:rgba(255,255,255,.88);color:#174482;font-size:26px;cursor:pointer;transform:translateY(-50%)}.product-detail-arrow.prev{left:18px}.product-detail-arrow.next{right:18px}
+  .product-detail-dots{position:absolute;bottom:24px;display:flex;gap:8px}.product-detail-dots .lb-dot{background:#b7c4d7}.product-detail-dots .lb-dot-active{background:#104aeb!important}
 
   /* ── Responsive ───────────────────────────────────────────────────────────── */
   @media (max-width: 768px) {
     #filter-sidebar { position: static !important; }
     div[style*="grid-template-columns:240px"] { grid-template-columns: 1fr !important; }
+    .product-detail-modal{grid-template-columns:1fr;overflow-y:auto}.product-detail-visual{min-height:330px;padding:42px}.product-detail-info{padding:30px 24px}.product-detail-info h2{font-size:25px}.product-detail-price{margin-top:12px}
   }
 </style>
 
@@ -690,6 +718,7 @@ import '../../styles/global.css';
     var lb   = document.getElementById('lightbox');
     var prev = document.getElementById('lb-prev');
     var next = document.getElementById('lb-next');
+    var product = allProducts.find(function(item){ return item._id === productId; });
     lb.style.display = 'flex'; document.body.style.overflow = 'hidden';
     prev.style.display = imgs.length > 1 ? 'flex' : 'none';
     next.style.display = imgs.length > 1 ? 'flex' : 'none';
@@ -697,6 +726,18 @@ import '../../styles/global.css';
       return '<button class="lb-dot' + (i === lightboxIndex ? ' lb-dot-active' : '') +
              '" data-lb-dot="' + i + '"></button>';
     }).join('');
+    if (product) {
+      document.getElementById('lb-category').textContent = product.category_id?.name || 'Producto';
+      document.getElementById('lb-name').textContent = product.name;
+      document.getElementById('lb-description').textContent = product.description || 'Una solución seleccionada para brindarte calidad, respaldo y excelente desempeño.';
+      document.getElementById('lb-brand').textContent = product.brand_id?.name ? 'Marca · ' + product.brand_id.name : 'Sin marca asignada';
+      document.getElementById('lb-sku').textContent = 'SKU · ' + product.sku;
+      document.getElementById('lb-price').textContent = formatQ(product.unit_price);
+      var detailAdd = document.getElementById('lb-add');
+      detailAdd.dataset.addProduct = product._id;
+      detailAdd.disabled = product.current_stock === 0;
+      detailAdd.textContent = product.current_stock === 0 ? 'Sin disponibilidad' : 'Agregar al carrito';
+    }
     _setLightboxImg();
   }
   function _setLightboxImg() {

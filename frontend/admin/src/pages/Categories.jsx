@@ -10,7 +10,16 @@ const columns = [
 const formFields = [
   { name: 'name', label: 'Nombre', required: true },
   { name: 'description', label: 'Descripción', type: 'textarea' },
-  { name: 'icon', label: 'Ícono (emoji)', placeholder: '💻' },
+  { name: 'icon', label: 'Ícono', type: 'select', options: [
+    { value: 'kids', label: 'Niños' },
+    { value: 'sports', label: 'Deportes' },
+    { value: 'family', label: 'Familia' },
+    { value: 'vehicles', label: 'Vehículos' },
+    { value: 'business', label: 'Empresas' },
+    { value: 'pets', label: 'Mascotas' },
+    { value: 'home', label: 'Hogar' },
+    { value: 'security', label: 'Seguridad' },
+  ] },
 ];
 
 export default function Categories() {

@@ -213,17 +213,20 @@ export default function Products() {
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div
-            className="modal-content"
-            style={{ maxWidth: 680 }}
+            className="modal-content product-editor-modal"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="modal-header">
-              <h2>{editing ? `Editar: ${editing.name}` : 'Nuevo Producto'}</h2>
-              <button onClick={() => setShowModal(false)} style={{ background: 'none', border: 'none', fontSize: 20, cursor: 'pointer' }}>✕</button>
+            <div className="modal-header product-editor-header">
+              <div>
+                <span className="product-editor-eyebrow">{editing ? 'Gestión de catálogo' : 'Nuevo registro'}</span>
+                <h2>{editing ? editing.name : 'Crear producto'}</h2>
+                <p>Organiza la información y los recursos visuales del producto.</p>
+              </div>
+              <button className="product-editor-close" onClick={() => setShowModal(false)} aria-label="Cerrar">✕</button>
             </div>
 
             <form onSubmit={handleSubmit}>
-              <div className="modal-body">
+              <div className="modal-body product-editor-body">
                 {/* ── Image Manager (only in edit mode) ── */}
                 {editing && (
                   <div style={{ marginBottom: 24 }}>
@@ -367,16 +370,16 @@ export default function Products() {
                     <input className="form-input" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
                   </div>
                   <div className="form-group">
-                    <label className="form-label">Categoría *</label>
-                    <select className="form-input" value={form.category_id} onChange={(e) => setForm({ ...form, category_id: e.target.value })} required>
-                      <option value="">Seleccionar</option>
+                    <label className="form-label">Categoría <span className="optional-label">Opcional</span></label>
+                    <select className="form-input" value={form.category_id} onChange={(e) => setForm({ ...form, category_id: e.target.value })}>
+                      <option value="">Sin categoría</option>
                       {categories.map((c) => <option key={c._id} value={c._id}>{c.name}</option>)}
                     </select>
                   </div>
                   <div className="form-group">
-                    <label className="form-label">Marca *</label>
-                    <select className="form-input" value={form.brand_id} onChange={(e) => setForm({ ...form, brand_id: e.target.value })} required>
-                      <option value="">Seleccionar</option>
+                    <label className="form-label">Marca <span className="optional-label">Opcional</span></label>
+                    <select className="form-input" value={form.brand_id} onChange={(e) => setForm({ ...form, brand_id: e.target.value })}>
+                      <option value="">Sin marca</option>
                       {brands.map((b) => <option key={b._id} value={b._id}>{b.name}</option>)}
                     </select>
                   </div>
@@ -394,8 +397,8 @@ export default function Products() {
                   </div>
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Descripción</label>
-                  <textarea className="form-input" rows="3" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+                  <label className="form-label">Descripción <span className="optional-label">Opcional</span></label>
+                  <textarea className="form-input product-description-input" rows="4" placeholder="Describe beneficios, uso y características principales…" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
                 </div>
 
                 {/* Note when creating */}

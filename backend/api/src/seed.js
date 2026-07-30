@@ -3,22 +3,31 @@ const bcrypt = require('bcryptjs');
 const prisma = require('./config/prisma');
 
 const categories = [
-  ['Computadoras y Laptops','Equipos de cómputo portátiles y de escritorio','💻'],
-  ['Redes y Conectividad','Routers, switches, access points y cableado','🌐'],
-  ['Impresoras y Escáneres','Equipos de impresión y digitalización','🖨️'],
-  ['Almacenamiento','Discos duros, SSD, memorias USB y NAS','💾'],
-  ['Accesorios','Teclados, mouses, monitores y periféricos','🖱️'],
-  ['Software y Licencias','Licencias de software empresarial','📀'],
-  ['Servidores','Servidores rack, torre y componentes','🖥️'],
-  ['Seguridad','Cámaras, UPS, reguladores y antivirus','🔒'],
+  ['Niños','Tecnología, aprendizaje y entretenimiento para los más pequeños','kids'],
+  ['Deportes','Equipamiento y tecnología para una vida activa','sports'],
+  ['Familia','Soluciones para compartir, cuidar y disfrutar en familia','family'],
+  ['Vehículos','Accesorios, seguridad y tecnología para tu vehículo','vehicles'],
+  ['Empresas','Equipos y soluciones para impulsar tu negocio','business'],
+  ['Mascotas','Productos para el cuidado y bienestar de tus mascotas','pets'],
+  ['Hogar','Tecnología y soluciones prácticas para cada espacio','home'],
+  ['Seguridad','Protección, monitoreo y respaldo para tu tranquilidad','security'],
 ];
 
 const slug = value => value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 
 async function seed() {
   if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL no está configurada.');
+  const activeNames = categories.map(([name]) => name);
+  await prisma.category.updateMany({
+    where: { name: { notIn: activeNames } },
+    data: { status: 'inactive' },
+  });
   for (const [name,description,icon] of categories) {
-    await prisma.category.upsert({ where:{name}, update:{description,icon}, create:{name,description,icon,slug:slug(name)} });
+    await prisma.category.upsert({
+      where:{name},
+      update:{description,icon,slug:slug(name),status:'active'},
+      create:{name,description,icon,slug:slug(name),status:'active'},
+    });
   }
   if (process.env.BOOTSTRAP_ADMIN_EMAIL && process.env.BOOTSTRAP_ADMIN_PASSWORD) {
     const email = process.env.BOOTSTRAP_ADMIN_EMAIL.toLowerCase();
