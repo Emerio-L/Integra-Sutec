@@ -13,9 +13,12 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
     </div>
   </section>
 
-  <section class="category-rail-wrap" aria-label="Categorías destacadas">
-    <div class="category-rail" id="category-rail">
-      <a class="all-categories" href="/catalogo"><span class="grid-icon">⊞</span><strong>Todas las<br/>categorías</strong><b>›</b></a>
+  <section class="category-showcase" aria-label="Categorías">
+    <div class="category-showcase-heading">
+      <div><span>Explora por categoría</span><h2>Soluciones para cada momento</h2></div>
+      <a href="/catalogo">Ver todos los productos <b>→</b></a>
+    </div>
+    <div class="category-grid" id="category-rail">
       <div class="category-loading">Cargando categorías…</div>
     </div>
   </section>
@@ -36,24 +39,22 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
   </section>
 
   <script define:vars={{ API }}>
-    const categoryColors = ['blue','mint','violet','orange'];
-    const categoryIcons = {
-      kids:'<svg viewBox="0 0 24 24"><path d="M9 3h6M12 3v3M6.5 10a5.5 5.5 0 0 1 11 0v2a5.5 5.5 0 0 1-11 0z"/><path d="M9.2 11h.01M14.8 11h.01M9.5 14.5c1.4 1 3.6 1 5 0"/></svg>',
-      sports:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="m8.5 5 2 3.5-2 3.5-4-.5M15.5 5l-2 3.5 2 3.5 4-.5M8.5 19l2-3.5h3L15.5 19"/></svg>',
-      family:'<svg viewBox="0 0 24 24"><path d="M12 20s-7-4.2-7-10a4 4 0 0 1 7-2.7A4 4 0 0 1 19 10c0 5.8-7 10-7 10z"/><path d="M9.5 11.5h5M12 9v5"/></svg>',
-      vehicles:'<svg viewBox="0 0 24 24"><path d="m5 16-1-1v-4l2-5h12l2 5v4l-1 1zM7 11h10M7.5 14h.01M16.5 14h.01M6 16v2M18 16v2"/></svg>',
-      business:'<svg viewBox="0 0 24 24"><path d="M4 20V7h10v13M14 11h6v9M8 10h2M8 14h2M8 18h2M17 14h1M17 17h1"/></svg>',
-      pets:'<svg viewBox="0 0 24 24"><circle cx="7" cy="8" r="2"/><circle cx="17" cy="8" r="2"/><circle cx="5" cy="13" r="1.7"/><circle cx="19" cy="13" r="1.7"/><path d="M8 18c0-3 2-5 4-5s4 2 4 5c0 2-2 2-4 1-2 1-4 1-4-1z"/></svg>',
-      home:'<svg viewBox="0 0 24 24"><path d="m3 11 9-7 9 7M5.5 9.5V20h13V9.5M9 20v-6h6v6"/></svg>',
-      security:'<svg viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.7 2.8 8 7 10 4.2-2 7-5.3 7-10V6z"/><path d="m9 12 2 2 4-5"/></svg>',
+    const categoryArt = {
+      'Niños':{theme:'kids',icon:'<svg viewBox="0 0 64 64"><path d="M20 21c0-9 5-14 12-14s12 5 12 14v5c0 9-5 15-12 15s-12-6-12-15z"/><path d="M24 17c5 3 11 3 16 0M26 27h.1M38 27h.1M27 34c3 2 7 2 10 0M18 52c3-8 8-11 14-11s11 3 14 11"/><path d="M14 18c-4 2-5 8-2 12M50 18c4 2 5 8 2 12"/></svg>'},
+      'Deportes':{theme:'sports',icon:'<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="23"/><path d="m23 11 7 11-8 10-13-3M41 11l-7 11 8 10 13-3M22 53l8-11h4l8 11M22 32l8 10M42 32l-8 10"/></svg>'},
+      'Familia':{theme:'family',icon:'<svg viewBox="0 0 64 64"><path d="M32 54S10 42 10 24c0-8 6-14 14-14 4 0 7 2 8 5 2-3 5-5 9-5 8 0 14 6 14 14 0 18-23 30-23 30z"/><path d="M22 29h20M32 19v20"/></svg>'},
+      'Vehículos':{theme:'vehicles',icon:'<svg viewBox="0 0 64 64"><path d="m13 44-4-4V28l7-15h32l7 15v12l-4 4zM17 28h30M19 37h.1M45 37h.1M16 44v7M48 44v7"/><path d="M21 13h22"/></svg>'},
+      'Empresas':{theme:'business',icon:'<svg viewBox="0 0 64 64"><path d="M10 54V12h29v42M39 25h15v29M20 22h9M20 32h9M20 42h9M45 34h4M45 43h4M6 54h52"/></svg>'},
+      'Mascotas':{theme:'pets',icon:'<svg viewBox="0 0 64 64"><circle cx="19" cy="19" r="7"/><circle cx="45" cy="19" r="7"/><circle cx="13" cy="35" r="6"/><circle cx="51" cy="35" r="6"/><path d="M21 50c0-10 5-17 11-17s11 7 11 17c0 7-6 7-11 3-5 4-11 4-11-3z"/></svg>'},
+      'Hogar':{theme:'home',icon:'<svg viewBox="0 0 64 64"><path d="m7 29 25-20 25 20M13 25v30h38V25M24 55V37h16v18"/><path d="M19 31h7M38 31h7"/></svg>'},
+      'Seguridad':{theme:'security',icon:'<svg viewBox="0 0 64 64"><path d="M32 7 12 15v14c0 14 8 23 20 29 12-6 20-15 20-29V15z"/><path d="m22 31 7 7 14-17"/></svg>'},
     };
     const money = new Intl.NumberFormat('es-GT',{style:'currency',currency:'GTQ',minimumFractionDigits:2});
     const escapeHtml = (value='') => String(value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
     const imageUrl = (path) => path ? (path.startsWith('http') ? path : API + path) : '';
     function renderCategories(items) {
       const rail = document.getElementById('category-rail'); if (!rail) return;
-      const first = rail.querySelector('.all-categories')?.outerHTML || '';
-      rail.innerHTML = first + items.slice(0,8).map((cat,i) => `<a class="category-item" href="/catalogo?category=${encodeURIComponent(cat._id)}"><span class="category-icon ${categoryColors[i%categoryColors.length]}">${categoryIcons[cat.icon] || categoryIcons.business}</span><p><strong>${escapeHtml(cat.name)}</strong><small>${escapeHtml(cat.description || 'Soluciones para cada necesidad')}</small><em>Explorar →</em></p></a>`).join('');
+      rail.innerHTML = items.slice(0,8).map(cat => { const art=categoryArt[cat.name] || categoryArt.Empresas; return `<a class="category-card category-${art.theme}" href="/catalogo?category=${encodeURIComponent(cat._id)}"><span class="category-art">${art.icon}</span><span class="category-copy"><strong>${escapeHtml(cat.name)}</strong><small>${escapeHtml(cat.description || 'Soluciones para cada necesidad')}</small><em>Descubrir <b>→</b></em></span></a>`; }).join('');
       const footer = document.getElementById('footer-categories'); if (footer) footer.innerHTML = items.slice(0,8).map(cat => `<a href="/catalogo?category=${encodeURIComponent(cat._id)}">${escapeHtml(cat.name)}</a>`).join('');
     }
     function renderProducts(items) {

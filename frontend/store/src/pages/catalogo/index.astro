@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import '../../styles/global.css';
+const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
 ---
 
 <BaseLayout title="Catálogo de Productos — Integra Sutec" description="Explora nuestro catálogo completo de suministros tecnológicos empresariales: laptops, redes, impresoras, almacenamiento y más.">
@@ -523,10 +524,10 @@ import '../../styles/global.css';
   }
   .lb-dot-active { background: white !important; transform: scale(1.4); }
   .product-detail-overlay{display:none;position:fixed;inset:0;z-index:3000;background:rgba(3,12,30,.78);backdrop-filter:blur(16px);align-items:center;justify-content:center;padding:20px}
-  .product-detail-modal{position:relative;width:min(1020px,96vw);max-height:90vh;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(330px,.85fr);overflow:hidden;background:#fff;border:1px solid rgba(255,255,255,.5);border-radius:28px;box-shadow:0 40px 120px rgba(0,0,0,.48)}
-  .product-detail-visual{position:relative;min-height:560px;display:grid;place-items:center;padding:54px;background:radial-gradient(circle at 50% 45%,#fff 0,#f4f8ff 58%,#e7eefb 100%)}
-  .product-detail-visual>img{width:100%;height:100%;max-height:450px;object-fit:contain;filter:drop-shadow(0 28px 24px rgba(26,53,93,.2));transition:opacity .18s}
-  .product-detail-info{padding:62px 48px 44px;display:flex;flex-direction:column;align-items:flex-start;background:linear-gradient(160deg,#fff,#f8fbff)}
+  .product-detail-modal{position:relative;width:min(1040px,96vw);height:min(650px,90vh);display:grid;grid-template-columns:minmax(0,58%) minmax(0,42%);overflow:hidden;background:#fff;border:1px solid rgba(255,255,255,.5);border-radius:28px;box-shadow:0 40px 120px rgba(0,0,0,.48)}
+  .product-detail-visual{position:relative;min-width:0;min-height:0;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:58px;background:radial-gradient(circle at 50% 45%,#fff 0,#f4f8ff 58%,#e7eefb 100%)}
+  .product-detail-visual>img{display:block;width:min(100%,510px);height:auto;max-width:100%;max-height:440px;object-fit:contain;position:relative;z-index:1;filter:drop-shadow(0 28px 24px rgba(26,53,93,.2));transition:opacity .18s}
+  .product-detail-info{position:relative;z-index:2;min-width:0;min-height:0;overflow-y:auto;padding:62px 46px 38px;display:flex;flex-direction:column;align-items:flex-start;background:linear-gradient(160deg,#fff,#f8fbff);border-left:1px solid #e6edf6}
   .product-detail-category{padding:6px 11px;border-radius:999px;background:#e9f1ff;color:#155ad1;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
   .product-detail-info h2{font:800 clamp(25px,3vw,36px)/1.08 Outfit;margin:18px 0 14px;color:#071a3d;letter-spacing:-.6px}
   .product-detail-description{font-size:14px;line-height:1.7;color:#5c6b82;margin:0 0 22px}
@@ -541,17 +542,15 @@ import '../../styles/global.css';
   @media (max-width: 768px) {
     #filter-sidebar { position: static !important; }
     div[style*="grid-template-columns:240px"] { grid-template-columns: 1fr !important; }
-    .product-detail-modal{grid-template-columns:1fr;overflow-y:auto}.product-detail-visual{min-height:330px;padding:42px}.product-detail-info{padding:30px 24px}.product-detail-info h2{font-size:25px}.product-detail-price{margin-top:12px}
+    .product-detail-overlay{padding:10px}.product-detail-modal{height:min(94vh,760px);grid-template-columns:1fr;grid-template-rows:minmax(260px,42%) minmax(0,58%);overflow:hidden;border-radius:20px}.product-detail-visual{min-height:0;padding:38px 44px 30px}.product-detail-visual>img{width:auto;height:auto;max-width:100%;max-height:250px}.product-detail-info{overflow-y:auto;padding:28px 24px 24px;border-left:0;border-top:1px solid #e6edf6}.product-detail-info h2{font-size:24px;margin:12px 0 10px}.product-detail-description{margin-bottom:14px}.product-detail-price{margin-top:10px}.product-detail-dots{bottom:13px}
   }
 </style>
 
-<script is:inline>
+<script define:vars={{ API }}>
   // ── Constants ─────────────────────────────────────────────────────────────
-  var API = 'http://localhost:4000';
   var ICONS = {
-    'Computadoras y Laptops':'💻','Redes y Conectividad':'🌐',
-    'Impresoras y Escáneres':'🖨️','Almacenamiento':'💾',
-    'Accesorios':'🖱️','Software y Licencias':'📀','Servidores':'🖥️','Seguridad':'🔒',
+    'Niños':'◉','Deportes':'⬡','Familia':'♥','Vehículos':'▰',
+    'Empresas':'▦','Mascotas':'✣','Hogar':'⌂','Seguridad':'◆',
   };
   var allProducts = [];
   var activeCat = '';
@@ -566,6 +565,7 @@ import '../../styles/global.css';
   function saveCart(c) { localStorage.setItem('is_cart', JSON.stringify(c)); window.dispatchEvent(new Event('cartUpdated')); }
   function cartTotal(c) { return c.reduce(function(s,i){ return s+i.unit_price*i.qty; },0); }
   function formatQ(n) { return 'Q '+Number(n).toLocaleString('es-GT',{minimumFractionDigits:2}); }
+  function mediaUrl(path) { return path ? (/^https?:\/\//i.test(path) ? path : API + path) : ''; }
 
   // ── addToCart ─────────────────────────────────────────────────────────────
   function addToCart(productId) {
@@ -618,7 +618,7 @@ import '../../styles/global.css';
       if(totalEl) totalEl.textContent=formatQ(total);
       if(itemsEl) itemsEl.innerHTML=cart.map(function(item){
         var imgHtml = item.image_url
-          ? '<img src="'+API+item.image_url+'" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML=\'📦\'" />'
+          ? '<img src="'+mediaUrl(item.image_url)+'" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML=\'📦\'" />'
           : '<span style="font-size:1.5rem;">'+(ICONS[item.category]||'📦')+'</span>';
         return '<div style="display:flex;gap:12px;align-items:center;background:#f8fafc;border-radius:12px;padding:12px;">'
           +'<div style="width:52px;height:52px;border-radius:10px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;">'+imgHtml+'</div>'
@@ -744,7 +744,7 @@ import '../../styles/global.css';
     var imgs  = productImages[lightboxProduct] || [];
     var imgEl = document.getElementById('lb-image');
     imgEl.style.opacity = '0';
-    setTimeout(function() { imgEl.src = API + imgs[lightboxIndex]; imgEl.style.opacity = '1'; }, 140);
+    setTimeout(function() { imgEl.src = mediaUrl(imgs[lightboxIndex]); imgEl.style.opacity = '1'; }, 140);
     document.querySelectorAll('.lb-dot').forEach(function(dot, i) {
       dot.classList.toggle('lb-dot-active', i === lightboxIndex);
     });
@@ -806,7 +806,7 @@ import '../../styles/global.css';
         + imgs.map(function(src, i) {
             return '<button class="thumb' + (i === 0 ? ' thumb-active' : '') + '"'
               + ' data-thumb-product="' + p._id + '" data-thumb-index="' + i + '"'
-              + ' style="background-image:url(' + API + src + ');"'
+              + ' style="background-image:url(' + mediaUrl(src) + ');"'
               + ' aria-label="Ver imagen ' + (i + 1) + '"></button>';
           }).join('')
         + '</div>';
@@ -818,7 +818,7 @@ import '../../styles/global.css';
           + badgeHtml
           + heartHtml
           + (img
-              ? '<img id="main-img-' + p._id + '" src="' + API + img + '" alt="' + p.name
+              ? '<img id="main-img-' + p._id + '" src="' + mediaUrl(img) + '" alt="' + p.name
                   + '" class="pcard-main-img" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'" />'
                 + '<div style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;font-size:3rem;">' + icon + '</div>'
               : '<span style="font-size:3rem;">' + icon + '</span>')
@@ -932,7 +932,7 @@ import '../../styles/global.css';
       var wrap    = document.querySelector('[data-open-lightbox="'+pid+'"]');
       var mainImg = document.getElementById('main-img-'+pid);
       if (mainImg && productImages[pid]) {
-        mainImg.src = API + productImages[pid][idx];
+        mainImg.src = mediaUrl(productImages[pid][idx]);
         if (wrap) wrap.dataset.imgIndex = idx;
       }
       document.querySelectorAll('[data-thumb-product="'+pid+'"]').forEach(function(t){

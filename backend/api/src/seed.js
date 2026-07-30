@@ -18,10 +18,22 @@ const slug = value => value.toLowerCase().normalize('NFD').replace(/[\u0300-\u03
 async function seed() {
   if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL no está configurada.');
   const activeNames = categories.map(([name]) => name);
-  await prisma.category.updateMany({
+  const legacyCategories = await prisma.category.findMany({
     where: { name: { notIn: activeNames } },
-    data: { status: 'inactive' },
+    select: { id: true },
   });
+  const legacyIds = legacyCategories.map(category => category.id);
+  if (legacyIds.length) {
+    await prisma.$transaction([
+      prisma.product.updateMany({
+        where: { category_id: { in: legacyIds } },
+        data: { category_id: null },
+      }),
+      prisma.category.deleteMany({
+        where: { id: { in: legacyIds } },
+      }),
+    ]);
+  }
   for (const [name,description,icon] of categories) {
     await prisma.category.upsert({
       where:{name},
