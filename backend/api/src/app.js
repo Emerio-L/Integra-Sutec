@@ -30,7 +30,7 @@ const bannerRoutes       = bannerStorage === 'local'
 
 const app = express();
 const PORT = process.env.PORT || process.env.API_PORT || 4000;
-const RELEASE = process.env.RAILWAY_GIT_COMMIT_SHA || process.env.GIT_COMMIT_SHA || '2026-07-30-deployment-audit-2';
+const RELEASE = process.env.RAILWAY_GIT_COMMIT_SHA || process.env.GIT_COMMIT_SHA || '2026-07-30-deployment-audit-3';
 
 // ── Security ──
 app.use(helmet());
