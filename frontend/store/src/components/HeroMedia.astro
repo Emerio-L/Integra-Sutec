@@ -7,7 +7,7 @@
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const saveData = navigator.connection?.saveData === true;
   const safe = (value = '') => String(value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
-  const integratedSource = (source = '') => source.includes('/banners/images/givlovzrenuc4c3f4ino')
+  const integratedSource = (source = '') => source.includes('/banners/images/givlovzrenuc4c3f4ino') && !source.includes('/e_make_transparent:20/')
     ? source.replace('/image/upload/', '/image/upload/e_make_transparent:20/')
     : source;
   function pictureMarkup(item, source = item.desktopImageUrl) {
