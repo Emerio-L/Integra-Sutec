@@ -8,7 +8,7 @@
   const saveData = navigator.connection?.saveData === true;
   const safe = (value = '') => String(value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
   const integratedSource = (source = '') => source.includes('/banners/images/givlovzrenuc4c3f4ino') && !source.includes('/e_make_transparent:')
-    ? source.replace('/image/upload/', '/image/upload/e_make_transparent:8/')
+    ? source.replace('/image/upload/', '/image/upload/e_make_transparent:8/c_crop,h_480,w_750,x_0,y_130/')
     : source;
   function pictureMarkup(item, source = item.desktopImageUrl) {
     const desktopSource = integratedSource(source);
