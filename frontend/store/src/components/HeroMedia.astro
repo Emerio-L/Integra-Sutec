@@ -7,13 +7,13 @@
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const saveData = navigator.connection?.saveData === true;
   const safe = (value = '') => String(value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
-  const integratedSource = (source = '') => source.includes('/banners/images/givlovzrenuc4c3f4ino') && !source.includes('/e_make_transparent:20/')
-    ? source.replace('/image/upload/', '/image/upload/e_make_transparent:20/')
+  const integratedSource = (source = '') => source.includes('/banners/images/givlovzrenuc4c3f4ino') && !source.includes('/e_make_transparent:')
+    ? source.replace('/image/upload/', '/image/upload/e_make_transparent:8/')
     : source;
   function pictureMarkup(item, source = item.desktopImageUrl) {
     const desktopSource = integratedSource(source);
     const mobileSource = integratedSource(item.mobileImageUrl);
-    return `<div class="hero-dynamic-media hero-image-media" style="isolation:auto!important"><picture>${mobileSource ? `<source media="(max-width: 768px)" srcset="${safe(mobileSource)}">` : ''}<img class="hero-integrated-image" src="${safe(desktopSource)}" width="1040" height="460" fetchpriority="high" alt="${safe(item.altText || item.title || '')}" style="mix-blend-mode:normal!important;-webkit-mask-image:none!important;mask-image:none!important;filter:contrast(1.04) saturate(1.1) drop-shadow(0 34px 25px rgba(0,5,25,.52)) drop-shadow(-10px 7px 9px rgba(0,153,255,.2))!important"></picture></div>`;
+    return `<div class="hero-dynamic-media hero-image-media" style="isolation:auto!important"><picture>${mobileSource ? `<source media="(max-width: 768px)" srcset="${safe(mobileSource)}">` : ''}<img class="hero-integrated-image" src="${safe(desktopSource)}" width="1040" height="460" fetchpriority="high" alt="${safe(item.altText || item.title || '')}" style="width:86%!important;height:86%!important;max-width:86%!important;max-height:86%!important;mix-blend-mode:normal!important;-webkit-mask-image:none!important;mask-image:none!important;transform:perspective(1400px) rotateY(-5deg) rotateX(1deg) translateY(-18px)!important;filter:contrast(1.02) saturate(1.02) drop-shadow(0 32px 24px rgba(0,5,25,.5)) drop-shadow(-7px 6px 8px rgba(0,153,255,.14))!important"></picture></div>`;
   }
   function render(item) {
     if (!media || !item) return;
