@@ -7,9 +7,12 @@
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const saveData = navigator.connection?.saveData === true;
   const safe = (value = '') => String(value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
-  const integratedSource = (source = '') => source.includes('/banners/images/givlovzrenuc4c3f4ino') && !source.includes('/e_make_transparent:')
-    ? source.replace('/image/upload/', '/image/upload/e_make_transparent:8/c_crop,h_480,w_750,x_0,y_130/')
-    : source;
+  const integratedSource = (source = '') => {
+    const safeSource = String(source || '');
+    return safeSource.includes('/banners/images/givlovzrenuc4c3f4ino') && !safeSource.includes('/e_make_transparent:')
+      ? safeSource.replace('/image/upload/', '/image/upload/e_make_transparent:8/c_crop,h_480,w_750,x_0,y_130/')
+      : safeSource;
+  };
   function pictureMarkup(item, source = item.desktopImageUrl) {
     const desktopSource = integratedSource(source);
     const mobileSource = integratedSource(item.mobileImageUrl);

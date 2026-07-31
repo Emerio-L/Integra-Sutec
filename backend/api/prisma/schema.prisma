@@ -124,11 +124,11 @@ model InventoryMovement {
   warehouse_from String   @default("principal")
   warehouse_to   String   @default("")
   notes          String   @default("")
-  created_by_id  String
+  created_by_id  String?
   created_at     DateTime @default(now())
   updated_at     DateTime @updatedAt
   product        Product  @relation(fields: [product_id], references: [id])
-  created_by     User     @relation(fields: [created_by_id], references: [id])
+  created_by     User?    @relation(fields: [created_by_id], references: [id])
 
   @@index([product_id, created_at])
   @@index([movement_type])

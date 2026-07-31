@@ -776,7 +776,6 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
     var imgs      = (p.images && p.images.length) ? p.images : [];
     var img       = imgs[0] || null;
     var icon      = ICONS[p.category_id && p.category_id.name] || '📦';
-    var isLow     = p.current_stock > 0 && p.current_stock <= p.minimum_stock;
     var isOut     = p.current_stock === 0;
     var catName   = p.category_id ? p.category_id.name : '';
     var brandName = p.brand_id    ? p.brand_id.name    : '';
@@ -785,18 +784,14 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
 
     // Deterministic 'Nuevo' badge based on name and ID hash for visual variety
     var hash = p._id.split('').reduce(function(acc, char) { return acc + char.charCodeAt(0); }, 0);
-    var isNew = (hash % 3 === 0) && !isOut && !isLow;
+    var isNew = (hash % 3 === 0) && !isOut;
 
     // Floating badge
     var badgeHtml = '';
     if (isOut) {
-      badgeHtml = '<span class="pcard-badge out">Sin stock</span>';
-    } else if (isLow) {
-      badgeHtml = '<span class="pcard-badge low">Stock bajo</span>';
+      badgeHtml = '<span class="pcard-badge out">No disponible</span>';
     } else if (isNew) {
       badgeHtml = '<span class="pcard-badge new">Nuevo</span>';
-    } else {
-      badgeHtml = '<span class="pcard-badge ok">En stock</span>';
     }
 
     // Heart Icon (wishlist button)
