@@ -56,8 +56,8 @@ export default function Products() {
     setPendingImages([]);
     setForm({
       sku: p.sku || '', name: p.name, description: p.description || '',
-      category_id: p.category_id?._id || p.category_id,
-      brand_id: p.brand_id?._id || p.brand_id,
+      category_id: p.category_id?._id || p.category_id?.id || p.category_id || '',
+      brand_id: p.brand_id?._id || p.brand_id?.id || p.brand_id || '',
       unit_price: p.unit_price, cost_price: p.cost_price,
       current_stock: p.current_stock ?? 0, minimum_stock: p.minimum_stock,
     });

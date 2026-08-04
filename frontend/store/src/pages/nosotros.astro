@@ -34,31 +34,34 @@ const values = [
   </section>
 
   <!-- Purpose -->
-  <section class="bg-dark-50/50 py-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section class="about-purpose py-20">
+    <div class="about-glow about-glow-one"></div><div class="about-glow about-glow-two"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
       <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(360px,0.85fr)] gap-10 lg:gap-14 items-start">
-        <div>
-          <h2 class="section-title mb-8">Tecnología con <span class="gradient-text">propósito</span></h2>
-          <div class="space-y-5 text-dark-600 leading-relaxed text-base md:text-lg">
-            <p>
+        <div class="about-story">
+          <span class="about-eyebrow">Quiénes somos</span>
+          <h2 class="section-title mb-4 text-white">Tecnología con <span class="gradient-text">propósito</span></h2>
+          <p class="about-intro">Soluciones pensadas desde la necesidad real, no solamente desde la tecnología.</p>
+          <div class="about-copy">
+            <p class="about-lead">
               <strong class="text-dark-900">Integra en Suministros y Tecnología, S.A.</strong> nace con el propósito de acercar al mercado guatemalteco soluciones tecnológicas útiles, confiables y adaptadas a necesidades reales.
             </p>
-            <p>
+            <div class="about-text-card"><span>01</span><p>
               Detrás de Integra Sutec hay conocimientos en tecnología, soporte técnico y soluciones digitales, junto con una comprensión de lo que las personas y las empresas buscan al elegir un producto tecnológico.
-            </p>
-            <p>
+            </p></div>
+            <div class="about-text-card"><span>02</span><p>
               Nuestro enfoque no consiste únicamente en incorporar dispositivos a un catálogo. Buscamos comprender para qué sirven, qué necesidad resuelven y qué valor pueden aportar a la vida diaria de nuestros clientes.
-            </p>
-            <p>
+            </p></div>
+            <div class="about-text-card"><span>03</span><p>
               Comenzamos con productos de tecnología inteligente y continuaremos ampliando nuestro catálogo hacia soluciones para niños, deporte, familia, transporte, empresas, mascotas, hogar y seguridad.
-            </p>
-            <p>
+            </p></div>
+            <p class="about-closing">
               Estamos construyendo nuestra trayectoria con transparencia, atención cercana y mejora continua. Queremos que la confianza en Integra Sutec se forme a partir de lo que realmente ofrecemos y de la experiencia que brindamos antes, durante y después de cada compra.
             </p>
           </div>
         </div>
 
-        <aside class="card p-7 md:p-8 lg:sticky lg:top-28">
+        <aside class="about-focus-card p-7 md:p-8 lg:sticky lg:top-28">
           <div class="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-primary-100 text-primary-700 mb-5">
             <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M12 3 4 7v5c0 4.5 3 7.5 8 9 5-1.5 8-4.5 8-9V7z"/><path d="m9 12 2 2 4-5"/>
@@ -108,3 +111,15 @@ const values = [
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .about-purpose{position:relative;overflow:hidden;background:linear-gradient(145deg,#03132f 0%,#06265a 54%,#073d78 100%)}
+  .about-purpose:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(71,151,255,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(71,151,255,.055) 1px,transparent 1px);background-size:58px 58px;mask-image:linear-gradient(90deg,#000,transparent 78%)}
+  .about-glow{position:absolute;border-radius:50%;filter:blur(4px);pointer-events:none}.about-glow-one{width:420px;height:420px;right:-140px;top:-170px;background:radial-gradient(circle,rgba(12,191,226,.25),transparent 68%)}.about-glow-two{width:360px;height:360px;left:-180px;bottom:-150px;background:radial-gradient(circle,rgba(20,105,255,.28),transparent 70%)}
+  .about-eyebrow{display:inline-flex;padding:7px 12px;margin-bottom:14px;border:1px solid rgba(74,205,235,.34);border-radius:999px;background:rgba(6,196,202,.08);color:#64e6dc;font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
+  .about-intro{max-width:620px;margin:0 0 30px;color:#b7c9e6;font-size:17px;line-height:1.65}
+  .about-copy{display:grid;gap:14px}.about-lead,.about-closing{margin:0;border-radius:18px;padding:22px 24px;line-height:1.75}.about-lead{background:linear-gradient(135deg,#fff,#eef6ff);color:#334968;box-shadow:0 18px 44px rgba(0,8,28,.18)}.about-lead strong{color:#071a3d}.about-closing{border:1px solid rgba(117,174,255,.24);background:rgba(255,255,255,.075);color:#d8e5f7;backdrop-filter:blur(10px)}
+  .about-text-card{display:grid;grid-template-columns:42px 1fr;gap:14px;align-items:start;padding:17px 19px;border:1px solid rgba(120,177,255,.18);border-radius:16px;background:rgba(4,24,58,.55);transition:transform .2s,border-color .2s}.about-text-card:hover{transform:translateX(4px);border-color:rgba(53,205,229,.42)}.about-text-card>span{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:linear-gradient(145deg,#0b78ff,#08bfcf);color:#fff;font:800 11px Outfit;box-shadow:0 8px 18px rgba(0,108,255,.28)}.about-text-card p{margin:0;color:#c5d5eb;font-size:15px;line-height:1.7}
+  .about-focus-card{border:1px solid rgba(255,255,255,.8);border-radius:24px;background:linear-gradient(155deg,#fff 0%,#eef6ff 100%);box-shadow:0 28px 70px rgba(0,8,30,.3),inset 0 1px #fff}
+  @media(max-width:640px){.about-purpose{padding-top:58px;padding-bottom:58px}.about-text-card{grid-template-columns:34px 1fr;padding:15px}.about-text-card>span{width:32px;height:32px}.about-lead,.about-closing{padding:19px}.about-intro{font-size:15px}}
+</style>
