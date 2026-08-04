@@ -5,25 +5,17 @@ import toast from 'react-hot-toast';
 const statusLabels = { new: 'Nueva', reviewed: 'Revisada', converted: 'Convertida', dismissed: 'Descartada' };
 const statusColors = { new: 'badge-danger', reviewed: 'badge-warning', converted: 'badge-success', dismissed: 'badge-gray' };
 
-const categoryLabels = {
-  computadoras: 'Computadoras y Laptops',
-  redes: 'Redes y Conectividad',
-  impresoras: 'Impresoras y Escáneres',
-  almacenamiento: 'Almacenamiento',
-  accesorios: 'Accesorios',
-  software: 'Software y Licencias',
-  servidores: 'Servidores',
-  seguridad: 'Seguridad',
-  otro: 'Otro',
-};
-
 export default function QuoteRequests() {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
   const [filterStatus, setFilterStatus] = useState('');
 
-  useEffect(() => { loadData(); }, [filterStatus]);
+  useEffect(() => {
+    loadData();
+    const refreshTimer = window.setInterval(loadData, 30000);
+    return () => window.clearInterval(refreshTimer);
+  }, [filterStatus]);
 
   async function loadData() {
     try {
@@ -76,18 +68,21 @@ export default function QuoteRequests() {
           )}
         </div>
         {/* Filter */}
-        <select
-          className="form-input"
-          style={{ width: 'auto', padding: '8px 14px', fontSize: 13 }}
-          value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value)}
-        >
-          <option value="">Todas</option>
-          <option value="new">Nuevas</option>
-          <option value="reviewed">Revisadas</option>
-          <option value="converted">Convertidas</option>
-          <option value="dismissed">Descartadas</option>
-        </select>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button className="btn btn-secondary btn-sm" onClick={loadData}>Actualizar</button>
+          <select
+            className="form-input"
+            style={{ width: 'auto', padding: '8px 14px', fontSize: 13 }}
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+          >
+            <option value="">Todas</option>
+            <option value="new">Nuevas</option>
+            <option value="reviewed">Revisadas</option>
+            <option value="converted">Convertidas</option>
+            <option value="dismissed">Descartadas</option>
+          </select>
+        </div>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: selected ? '1fr 420px' : '1fr', gap: 20 }}>
@@ -120,7 +115,7 @@ export default function QuoteRequests() {
                     <div>{req.name}</div>
                     <div style={{ fontSize: 12, color: 'var(--dark-400)' }}>{req.email}</div>
                   </td>
-                  <td>{categoryLabels[req.category] || req.category || '—'}</td>
+                  <td>{req.category || '—'}</td>
                   <td>{new Date(req.created_at).toLocaleDateString('es-GT')}</td>
                   <td onClick={(e) => e.stopPropagation()} style={{ display: 'flex', gap: 6 }}>
                     {req.status === 'new' && (
@@ -172,7 +167,7 @@ export default function QuoteRequests() {
                 { label: 'Cargo', value: selected.position || '—' },
                 { label: 'Email', value: selected.email },
                 { label: 'Teléfono', value: selected.phone },
-                { label: 'Categoría', value: categoryLabels[selected.category] || selected.category || '—' },
+                { label: 'Categoría', value: selected.category || '—' },
                 { label: 'Fecha límite', value: selected.deadline ? new Date(selected.deadline).toLocaleDateString('es-GT') : '—' },
               ].map((item) => (
                 <div key={item.label} style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>

@@ -437,12 +437,6 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
     display: flex; flex-direction: column;
     flex: 1;
   }
-  .pcard-cat-label {
-    font-size: 11px; font-weight: 600;
-    color: #94a3b8; margin-bottom: 4px;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-  }
   .pcard-name {
     font-family: 'Outfit', sans-serif;
     font-size: 14px; font-weight: 700;
@@ -811,9 +805,6 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
     var img       = imgs[0] || null;
     var icon      = ICONS[p.category_id && p.category_id.name] || '📦';
     var isOut     = p.current_stock === 0;
-    var catName   = p.category_id ? p.category_id.name : '';
-    var brandName = p.brand_id    ? p.brand_id.name    : '';
-
     productImages[p._id] = imgs;
 
     // Deterministic 'Nuevo' badge based on name and ID hash for visual variety
@@ -865,7 +856,6 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
       + thumbStrip
       // ── Body ──
       + '<div class="pcard-body">'
-          + '<div class="pcard-cat-label">' + (catName || 'General') + '</div>'
           + '<div class="pcard-name" title="' + p.name + '">' + p.name + '</div>'
           + '<button type="button" class="pcard-description" data-open-details="' + p._id + '" aria-label="Ver descripción completa de ' + p.name + '">' + (p.description || 'Conoce los detalles y beneficios de este producto.') + '</button>'
           + '<div class="pcard-price">' + formatQ(p.unit_price) + '</div>'
