@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import '../styles/global.css';
+const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
 ---
 
 <BaseLayout title="Solicitar Cotización — Integra Sutec" description="Solicita una cotización personalizada para suministros tecnológicos empresariales.">
@@ -82,20 +83,19 @@ import '../styles/global.css';
               <label for="q-category" class="text-sm font-medium text-dark-700 block mb-1.5">Categoría de interés</label>
               <select id="q-category" class="input-field">
                 <option value="">Selecciona una categoría</option>
-                <option value="computadoras">Computadoras y Laptops</option>
-                <option value="redes">Redes y Conectividad</option>
-                <option value="impresoras">Impresoras y Escáneres</option>
-                <option value="almacenamiento">Almacenamiento</option>
-                <option value="accesorios">Accesorios</option>
-                <option value="software">Software y Licencias</option>
-                <option value="servidores">Servidores</option>
-                <option value="seguridad">Seguridad</option>
-                <option value="otro">Otro</option>
+                <option value="Niños">Niños</option>
+                <option value="Deportes">Deportes</option>
+                <option value="Familia">Familia</option>
+                <option value="Transporte">Transporte</option>
+                <option value="Empresas">Empresas</option>
+                <option value="Mascotas">Mascotas</option>
+                <option value="Hogar">Hogar</option>
+                <option value="Seguridad">Seguridad</option>
               </select>
             </div>
             <div>
               <label for="q-details" class="text-sm font-medium text-dark-700 block mb-1.5">Detalle de productos y cantidades *</label>
-              <textarea id="q-details" rows="5" required class="input-field resize-none" placeholder="Ej: 10 laptops HP ProBook 450 G10, 5 switches Cisco SG350-28, etc."></textarea>
+              <textarea id="q-details" rows="5" required class="input-field resize-none" placeholder="Ej: 10 relojes infantiles con GPS o 5 soluciones de seguridad para el hogar."></textarea>
             </div>
             <div>
               <label for="q-deadline" class="text-sm font-medium text-dark-700 block mb-1.5">Fecha de entrega esperada</label>
@@ -117,18 +117,38 @@ import '../styles/global.css';
           </button>
           <p class="text-xs text-dark-400 self-center">Recibirás una respuesta en máximo 24 horas hábiles.</p>
         </div>
+        <p id="quote-error" class="hidden text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl px-4 py-3" role="alert"></p>
       </form>
     </div>
   </section>
 
-  <script>
+  <script define:vars={{ API }}>
     const form = document.getElementById('quote-form') as HTMLFormElement;
     const submitBtn = form?.querySelector('button[type="submit"]') as HTMLButtonElement;
-    const API = 'http://localhost:4000/api';
+    const errorMsg = document.getElementById('quote-error');
+    const categorySelect = document.getElementById('q-category') as HTMLSelectElement;
+    const categoryOrder = ['Niños','Deportes','Familia','Transporte','Empresas','Mascotas','Hogar','Seguridad'];
+
+    fetch(`${API}/api/categories`)
+      .then((response) => {
+        if (!response.ok) throw new Error('No fue posible cargar las categorías');
+        return response.json();
+      })
+      .then((result) => {
+        const available = (result.data || result || []).map((category) => category.name);
+        const currentCategories = categoryOrder.filter((name) => available.includes(name));
+        if (!currentCategories.length) return;
+        categorySelect.innerHTML = '<option value="">Selecciona una categoría</option>'
+          + currentCategories.map((name) => `<option value="${name}">${name}</option>`).join('');
+      })
+      .catch(() => {
+        // La lista vigente incluida en la página funciona como respaldo si la API tarda en responder.
+      });
 
     form?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const original = submitBtn.textContent;
+      errorMsg?.classList.add('hidden');
       submitBtn.textContent = 'Enviando...';
       submitBtn.disabled = true;
 
@@ -146,7 +166,7 @@ import '../styles/global.css';
       };
 
       try {
-        const res = await fetch(`${API}/quote-requests/public`, {
+        const res = await fetch(`${API}/api/quote-requests/public`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
@@ -160,10 +180,16 @@ import '../styles/global.css';
           form.reset();
           window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
-          alert(json.error || 'Error al enviar. Inténtalo de nuevo.');
+          if (errorMsg) {
+            errorMsg.textContent = json.error || 'No fue posible enviar la solicitud. Revisa los datos e inténtalo de nuevo.';
+            errorMsg.classList.remove('hidden');
+          }
         }
       } catch (err) {
-        alert('Error de conexión. Verifica tu internet e inténtalo de nuevo.');
+        if (errorMsg) {
+          errorMsg.textContent = 'No fue posible conectar con el servicio. Inténtalo nuevamente en unos momentos.';
+          errorMsg.classList.remove('hidden');
+        }
       } finally {
         submitBtn.textContent = original;
         submitBtn.disabled = false;
