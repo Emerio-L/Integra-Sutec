@@ -204,6 +204,9 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
       </div>
       <form id="checkout-form">
         <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:#878da5;margin-bottom:10px;">Datos de Entrega</div>
+        <div style="display:flex;align-items:flex-start;gap:8px;background:#eef5ff;border:1px solid #d7e6ff;color:#375478;border-radius:10px;padding:9px 11px;margin-bottom:12px;font-size:11px;line-height:1.45;">
+          <span aria-hidden="true">🔒</span><span>Tus datos de entrega se guardan únicamente en este dispositivo para facilitar tu próxima compra.</span>
+        </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px;">
           <div>
             <label style="font-size:12px;font-weight:600;color:#44485e;display:block;margin-bottom:3px;">Nombre *</label>
@@ -671,6 +674,28 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
   window.closeCart = closeCart;
 
   // ── Checkout ───────────────────────────────────────────────────────────────
+  var DELIVERY_STORAGE_KEY = 'integrasutec:delivery:v1';
+  var deliveryFields = {
+    name: 'co-name', phone: 'co-phone', email: 'co-email', nit: 'co-nit',
+    address: 'co-address', notes: 'co-notes'
+  };
+  function saveDeliveryDetails() {
+    var details = {};
+    Object.keys(deliveryFields).forEach(function(key) {
+      var field = document.getElementById(deliveryFields[key]);
+      details[key] = field ? field.value : '';
+    });
+    try { localStorage.setItem(DELIVERY_STORAGE_KEY, JSON.stringify(details)); } catch (_) {}
+  }
+  function restoreDeliveryDetails() {
+    try {
+      var details = JSON.parse(localStorage.getItem(DELIVERY_STORAGE_KEY) || '{}');
+      Object.keys(deliveryFields).forEach(function(key) {
+        var field = document.getElementById(deliveryFields[key]);
+        if (field && !field.value && typeof details[key] === 'string') field.value = details[key];
+      });
+    } catch (_) {}
+  }
   function openCheckout() {
     closeCart();
     var cart = getCart();
@@ -684,6 +709,7 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
     document.getElementById('checkout-modal').style.display = 'flex';
     document.getElementById('checkout-form').style.display = 'block';
     document.getElementById('order-success').style.display = 'none';
+    restoreDeliveryDetails();
     document.body.style.overflow = 'hidden';
   }
   function closeCheckout() {
@@ -704,6 +730,7 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
     if (cart.length===0) { alert('El carrito está vacío.'); return; }
     var btn = document.getElementById('submit-btn');
     btn.textContent='Enviando pedido...'; btn.disabled=true;
+    saveDeliveryDetails();
     var payload = {
       customer: {
         name: document.getElementById('co-name').value,
@@ -1021,6 +1048,9 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
   document.getElementById('checkout-close-btn').addEventListener('click', closeCheckout);
   document.getElementById('success-close-btn').addEventListener('click', function(){ closeCheckout(); saveCart([]); updateCartUI(); });
   document.getElementById('checkout-form').addEventListener('submit', submitOrder);
+  document.getElementById('checkout-form').addEventListener('input', function(e) {
+    if (e.target && Object.values(deliveryFields).indexOf(e.target.id) !== -1) saveDeliveryDetails();
+  });
   
   // Sort select listener
   document.getElementById('sort-select').addEventListener('change', applyFilters);

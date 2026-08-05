@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import '../styles/global.css';
+const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
 ---
 
 <BaseLayout title="Contacto — Integra Sutec" description="Contacta a Integra Sutec para cotizaciones, soporte técnico o consultas sobre suministros tecnológicos.">
@@ -57,6 +58,14 @@ import '../styles/global.css';
               Enviar Mensaje
               <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
             </button>
+            <div id="contact-success" class="contact-feedback contact-feedback-success" role="status" aria-live="polite" hidden>
+              <span class="contact-feedback-icon">✓</span>
+              <div><strong>Mensaje enviado correctamente</strong><p>Gracias por contactarnos. Nuestro equipo revisará tu mensaje y te responderá a la brevedad.</p></div>
+            </div>
+            <div id="contact-error" class="contact-feedback contact-feedback-error" role="alert" aria-live="assertive" hidden>
+              <span class="contact-feedback-icon">!</span>
+              <div><strong>No fue posible enviar el mensaje</strong><p id="contact-error-text">Revisa tus datos e inténtalo nuevamente.</p></div>
+            </div>
           </form>
         </div>
       </div>
@@ -82,8 +91,8 @@ import '../styles/global.css';
             </div>
             <div>
               <h3 class="font-semibold text-dark-900 mb-1">Teléfonos</h3>
-              <p class="text-sm text-dark-500"><a href="tel:+50235387468" class="hover:text-primary-600 transition-colors">3538-7468</a></p>
-              <p class="text-sm text-dark-500"><a href="tel:+50251446336" class="hover:text-primary-600 transition-colors">5144-6336</a></p>
+              <p class="text-sm text-dark-500"><a href="tel:+50235387468" class="hover:text-primary-600 transition-colors">+502 3538-7468</a></p>
+              <p class="text-sm text-dark-500"><a href="tel:+50251446336" class="hover:text-primary-600 transition-colors">+502 5144-6336</a></p>
               <p class="text-xs text-dark-400 mt-1">Lun - Vie: 8:00 AM - 5:30 PM</p>
             </div>
           </div>
@@ -118,24 +127,28 @@ import '../styles/global.css';
     </div>
   </section>
 
-  <script>
-    const API = 'http://localhost:4000';
+  <script define:vars={{ API }}>
     const form = document.getElementById('contact-form');
     const btn  = form?.querySelector('button[type="submit"]');
+    const successPanel = document.getElementById('contact-success');
+    const errorPanel = document.getElementById('contact-error');
+    const errorText = document.getElementById('contact-error-text');
 
     form?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const original = btn.innerHTML;
+      successPanel.hidden = true;
+      errorPanel.hidden = true;
       btn.disabled = true;
       btn.textContent = 'Enviando...';
 
       const payload = {
-        name:    (document.getElementById('contact-name') as HTMLInputElement).value,
-        email:   (document.getElementById('contact-email') as HTMLInputElement).value,
-        phone:   (document.getElementById('contact-phone') as HTMLInputElement).value,
-        company: (document.getElementById('contact-company') as HTMLInputElement).value,
-        subject: (document.getElementById('contact-subject') as HTMLSelectElement).value,
-        message: (document.getElementById('contact-message') as HTMLTextAreaElement).value,
+        name:    document.getElementById('contact-name').value,
+        email:   document.getElementById('contact-email').value,
+        phone:   document.getElementById('contact-phone').value,
+        company: document.getElementById('contact-company').value,
+        subject: document.getElementById('contact-subject').value,
+        message: document.getElementById('contact-message').value,
       };
 
       try {
@@ -144,21 +157,21 @@ import '../styles/global.css';
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
-        const json = await res.json();
+        const json = await res.json().catch(() => ({}));
 
         if (res.ok) {
-          // Show success banner
-          const banner = document.createElement('div');
-          banner.style.cssText = 'background:#dcfce7;border:1px solid #86efac;color:#166534;padding:14px 18px;border-radius:12px;font-weight:600;font-size:14px;margin-top:16px;';
-          banner.textContent = '✅ ¡Mensaje enviado! Nos pondremos en contacto contigo pronto.';
-          form.after(banner);
           form.reset();
-          setTimeout(() => banner.remove(), 6000);
+          successPanel.hidden = false;
+          successPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
         } else {
-          alert(json.error || 'Error al enviar el mensaje. Intenta de nuevo.');
+          errorText.textContent = json.error || 'Revisa tus datos e inténtalo nuevamente.';
+          errorPanel.hidden = false;
+          errorPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
       } catch {
-        alert('Error de conexión. Verifica tu internet e intenta de nuevo.');
+        errorText.textContent = 'No pudimos conectar con el servicio. Verifica tu conexión e inténtalo nuevamente.';
+        errorPanel.hidden = false;
+        errorPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
       } finally {
         btn.disabled = false;
         btn.innerHTML = original;
@@ -166,3 +179,10 @@ import '../styles/global.css';
     });
   </script>
 </BaseLayout>
+
+<style>
+  .contact-feedback{margin-top:18px;padding:17px 18px;border-radius:14px;display:flex;align-items:flex-start;gap:13px;box-shadow:0 12px 30px rgba(15,23,42,.08)}
+  .contact-feedback[hidden]{display:none!important}.contact-feedback-icon{width:30px;height:30px;display:grid;place-items:center;flex:0 0 auto;border-radius:50%;font-weight:900}.contact-feedback strong{display:block;margin-bottom:3px;font:700 15px Outfit}.contact-feedback p{margin:0;font-size:13px;line-height:1.55}
+  .contact-feedback-success{border:1px solid #a7e4d2;background:linear-gradient(135deg,#effcf7,#e5f8f4);color:#116149}.contact-feedback-success .contact-feedback-icon{background:#c8f0e3;color:#087b5e}
+  .contact-feedback-error{border:1px solid #fecaca;background:linear-gradient(135deg,#fff7f7,#fff0f0);color:#9f2424}.contact-feedback-error .contact-feedback-icon{background:#fee2e2;color:#c62828}
+</style>
