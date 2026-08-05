@@ -113,10 +113,10 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
   </section>
 
   <script define:vars={{ API }}>
-    const form = document.getElementById('quote-form') as HTMLFormElement;
-    const submitBtn = form?.querySelector('button[type="submit"]') as HTMLButtonElement;
+    const form = document.getElementById('quote-form');
+    const submitBtn = form?.querySelector('button[type="submit"]');
     const errorMsg = document.getElementById('quote-error');
-    const categorySelect = document.getElementById('q-category') as HTMLSelectElement;
+    const categorySelect = document.getElementById('q-category');
     const categoryOrder = ['Niños','Deportes','Familia','Transporte','Empresas','Mascotas','Hogar','Seguridad'];
 
     fetch(`${API}/api/categories`)
@@ -143,14 +143,14 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
       submitBtn.disabled = true;
 
       const data = {
-        company:  (document.getElementById('q-company') as HTMLInputElement).value,
-        nit:      (document.getElementById('q-nit') as HTMLInputElement).value,
-        name:     (document.getElementById('q-name') as HTMLInputElement).value,
-        position: (document.getElementById('q-position') as HTMLInputElement).value,
-        email:    (document.getElementById('q-email') as HTMLInputElement).value,
-        phone:    (document.getElementById('q-phone') as HTMLInputElement).value,
-        category: (document.getElementById('q-category') as HTMLSelectElement).value,
-        details:  (document.getElementById('q-details') as HTMLTextAreaElement).value,
+        company:  document.getElementById('q-company').value,
+        nit:      document.getElementById('q-nit').value,
+        name:     document.getElementById('q-name').value,
+        position: document.getElementById('q-position').value,
+        email:    document.getElementById('q-email').value,
+        phone:    document.getElementById('q-phone').value,
+        category: document.getElementById('q-category').value,
+        details:  document.getElementById('q-details').value,
       };
 
       try {
