@@ -11,9 +11,6 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
   <div style="position:absolute;top:-60px;right:10%;width:300px;height:300px;background:radial-gradient(circle,rgba(34,197,100,0.12) 0%,transparent 70%);pointer-events:none;"></div>
   <div style="position:absolute;bottom:-40px;left:5%;width:200px;height:200px;background:radial-gradient(circle,rgba(47,127,255,0.2) 0%,transparent 70%);pointer-events:none;"></div>
   <div style="max-width:1280px;margin:auto;padding:0 24px;position:relative;">
-    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;color:rgba(255,255,255,0.8);margin-bottom:10px;backdrop-filter:blur(8px);">
-      🏪 Integra Sutec — Suministros Tecnológicos
-    </div>
     <h1 style="font-family:'Outfit',sans-serif;font-size:clamp(22px,3vw,32px);font-weight:800;color:white;margin:0 0 6px;line-height:1.1;">
       Catálogo de <span style="color:white;">Productos</span>
     </h1>
@@ -231,11 +228,11 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
         </div>
         <div style="margin-bottom:12px;">
           <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:#878da5;margin-bottom:8px;">
-            Método de Pago <span style="font-size:11px;font-weight:500;text-transform:none;color:#185fff;">· Contra entrega</span>
+            Método de pago <span style="font-size:11px;font-weight:500;text-transform:none;color:#185fff;">· Selecciona una opción</span>
           </div>
           <div id="payment-options" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
-            <button type="button" data-pay="credit_card" class="pay-option"><span style="font-size:20px;">💳</span><span style="display:block;font-size:11px;font-weight:600;color:#343645;margin-top:3px;">Crédito</span></button>
-            <button type="button" data-pay="debit_card" class="pay-option"><span style="font-size:20px;">🏦</span><span style="display:block;font-size:11px;font-weight:600;color:#343645;margin-top:3px;">Débito</span></button>
+            <button type="button" data-pay="card" class="pay-option"><span style="font-size:20px;">💳</span><span style="display:block;font-size:11px;font-weight:600;color:#343645;margin-top:3px;">Tarjeta</span></button>
+            <button type="button" data-pay="bank_transfer" class="pay-option"><span style="font-size:20px;">🏦</span><span style="display:block;font-size:11px;font-weight:600;color:#343645;margin-top:3px;">Depósito / transferencia</span></button>
             <button type="button" data-pay="cash" class="pay-option"><span style="font-size:20px;">💵</span><span style="display:block;font-size:11px;font-weight:600;color:#343645;margin-top:3px;">Efectivo</span></button>
           </div>
           <input type="hidden" id="selected-payment" />

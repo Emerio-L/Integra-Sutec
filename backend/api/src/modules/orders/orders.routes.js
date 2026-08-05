@@ -19,7 +19,7 @@ router.post('/public', async (req, res, next) => {
     if (!items || items.length === 0) {
       return res.status(400).json({ success: false, error: 'El pedido no tiene productos.' });
     }
-    if (!['credit_card', 'debit_card', 'cash'].includes(payment_method)) {
+    if (!['card', 'bank_transfer', 'cash', 'credit_card', 'debit_card'].includes(payment_method)) {
       return res.status(400).json({ success: false, error: 'Método de pago inválido.' });
     }
 
@@ -179,7 +179,7 @@ router.post('/:id/invoice', authenticate, authorize('admin', 'manager'), async (
       });
     }
 
-    const pmMap = { credit_card: 'card', debit_card: 'card', cash: 'cash' };
+    const pmMap = { card: 'card', bank_transfer: 'transfer', credit_card: 'card', debit_card: 'card', cash: 'cash' };
 
     const invoiceItems = order.items.map(item => ({
       product_id:   item.product_id || item._id,
@@ -228,7 +228,7 @@ router.get('/:id/invoice/pdf', authenticate, authorize('admin', 'manager', 'sell
     const invoiceData = {
       invoice_number: stored ? stored.invoice_number : order.order_number.replace('PED-', 'FAC-'),
       created_at:     stored ? stored.created_at : order.created_at,
-      payment_method: ({ credit_card: 'card', debit_card: 'card', cash: 'cash' })[order.payment_method] || 'cash',
+      payment_method: ({ card: 'card', bank_transfer: 'transfer', credit_card: 'card', debit_card: 'card', cash: 'cash' })[order.payment_method] || 'cash',
       payment_status: stored ? stored.payment_status : 'pending',
       customer_id: {
         name:    order.customer.name    || '—',

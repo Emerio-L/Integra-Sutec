@@ -13,6 +13,8 @@ const STATUS = {
 };
 
 const PAYMENT = {
+  card:        { label: 'Tarjeta',                icon: '💳' },
+  bank_transfer: { label: 'Depósito / transferencia', icon: '🏦' },
   credit_card: { label: 'Tarjeta de Crédito', icon: '💳' },
   debit_card:  { label: 'Tarjeta de Débito',  icon: '🏦' },
   cash:        { label: 'Efectivo',            icon: '💵' },
@@ -216,7 +218,7 @@ export default function Orders() {
                   <span style={{ fontSize: 20 }}>{PAYMENT[selected.payment_method]?.icon}</span>
                   <div>
                     <div style={{ fontSize: 13, fontWeight: 600 }}>{PAYMENT[selected.payment_method]?.label}</div>
-                    <div style={{ fontSize: 11, color: 'var(--primary-600)', fontWeight: 600 }}>Contra entrega</div>
+                    <div style={{ fontSize: 11, color: 'var(--primary-600)', fontWeight: 600 }}>{selected.payment_method === 'bank_transfer' ? 'Pago por depósito o transferencia' : 'Contra entrega'}</div>
                   </div>
                 </div>
               </div>
