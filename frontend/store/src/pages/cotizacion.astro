@@ -46,8 +46,8 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
               <input type="text" id="q-company" required class="input-field" placeholder="Nombre de la empresa" />
             </div>
             <div>
-              <label for="q-nit" class="text-sm font-medium text-dark-700 block mb-1.5">NIT *</label>
-              <input type="text" id="q-nit" required class="input-field" placeholder="1234567-8" />
+              <label for="q-nit" class="text-sm font-medium text-dark-700 block mb-1.5">NIT <span class="text-dark-400 font-normal">(opcional)</span></label>
+              <input type="text" id="q-nit" class="input-field" placeholder="C/F" />
             </div>
           </div>
         </div>
@@ -97,17 +97,7 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
               <label for="q-details" class="text-sm font-medium text-dark-700 block mb-1.5">Detalle de productos y cantidades *</label>
               <textarea id="q-details" rows="5" required class="input-field resize-none" placeholder="Ej: 10 relojes infantiles con GPS o 5 soluciones de seguridad para el hogar."></textarea>
             </div>
-            <div>
-              <label for="q-deadline" class="text-sm font-medium text-dark-700 block mb-1.5">Fecha de entrega esperada</label>
-              <input type="date" id="q-deadline" class="input-field" />
-            </div>
           </div>
-        </div>
-
-        <!-- Notes -->
-        <div>
-          <label for="q-notes" class="text-sm font-medium text-dark-700 block mb-1.5">Notas adicionales</label>
-          <textarea id="q-notes" rows="3" class="input-field resize-none" placeholder="Requisitos especiales, condiciones de pago, etc."></textarea>
         </div>
 
         <div class="pt-4 border-t border-dark-100 flex flex-col sm:flex-row gap-4">
@@ -161,8 +151,6 @@ const API = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000';
         phone:    (document.getElementById('q-phone') as HTMLInputElement).value,
         category: (document.getElementById('q-category') as HTMLSelectElement).value,
         details:  (document.getElementById('q-details') as HTMLTextAreaElement).value,
-        deadline: (document.getElementById('q-deadline') as HTMLInputElement).value,
-        notes:    (document.getElementById('q-notes') as HTMLTextAreaElement).value,
       };
 
       try {

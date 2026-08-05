@@ -7,20 +7,18 @@ const router = Router();
 // ── PUBLIC: Recibir solicitud desde el sitio web (sin autenticación) ──────────
 router.post('/public', async (req, res, next) => {
   try {
-    const { company, nit, name, position, email, phone, category, details, deadline, notes } =
+    const { company, nit, name, position, email, phone, category, details } =
       req.body;
 
-    if (!company || !nit || !name || !email || !phone || !details) {
+    if (!company || !name || !email || !phone || !details) {
       return res.status(400).json({
         success: false,
-        error: 'Campos obligatorios: empresa, NIT, nombre, email, teléfono y detalle.',
+        error: 'Campos obligatorios: empresa, nombre, email, teléfono y detalle.',
       });
     }
 
     const request = await QuoteRequest.create({
-      company, nit, name, position, email, phone, category, details,
-      deadline: deadline ? new Date(deadline) : undefined,
-      notes,
+      company, nit: nit || '', name, position, email, phone, category, details,
     });
 
     res.status(201).json({

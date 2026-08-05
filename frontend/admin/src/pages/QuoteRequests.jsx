@@ -109,7 +109,7 @@ export default function QuoteRequests() {
                   <td><span className={`badge ${statusColors[req.status]}`}>{statusLabels[req.status]}</span></td>
                   <td>
                     <div style={{ fontWeight: 600 }}>{req.company}</div>
-                    <div style={{ fontSize: 12, color: 'var(--dark-400)' }}>NIT: {req.nit}</div>
+                    <div style={{ fontSize: 12, color: 'var(--dark-400)' }}>NIT: {req.nit || 'C/F'}</div>
                   </td>
                   <td>
                     <div>{req.name}</div>
@@ -162,13 +162,12 @@ export default function QuoteRequests() {
 
               {[
                 { label: 'Empresa', value: selected.company },
-                { label: 'NIT', value: selected.nit },
+                { label: 'NIT', value: selected.nit || 'C/F' },
                 { label: 'Nombre', value: selected.name },
                 { label: 'Cargo', value: selected.position || '—' },
                 { label: 'Email', value: selected.email },
                 { label: 'Teléfono', value: selected.phone },
                 { label: 'Categoría', value: selected.category || '—' },
-                { label: 'Fecha límite', value: selected.deadline ? new Date(selected.deadline).toLocaleDateString('es-GT') : '—' },
               ].map((item) => (
                 <div key={item.label} style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                   <span style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', color: 'var(--dark-400)', letterSpacing: '0.05em' }}>{item.label}</span>
